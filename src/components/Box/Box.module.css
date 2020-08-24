@@ -1,0 +1,19 @@
+.box {
+  height: 100px;
+  width: 100px;
+}
+
+.text {
+  text-align: center;
+  font-size: 70px;
+  font-weight: 700;
+  margin: 5px auto;
+}
+
+.bottom {
+  border-bottom: 2px solid black;
+}
+
+.right {
+  border-right: 2px solid black;
+}
