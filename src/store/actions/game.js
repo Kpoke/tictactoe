@@ -19,3 +19,9 @@ export const reset = () => {
     type: actionTypes.RESET,
   };
 };
+
+export const setPlayers = () => {
+  return {
+    type: actionTypes.SET_PLAYERS,
+  };
+};

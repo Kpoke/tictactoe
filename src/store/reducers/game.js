@@ -1,24 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
-
-function areEqual() {
-  let len = arguments.length;
-  for (let i = 1; i < len; i++) {
-    if (arguments[i] === "" || arguments[i] !== arguments[i - 1]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-const played = (state, action, value) => {
-  if (state.gameOver) {
-    return state;
-  }
-  let newBoxes = { ...state.boxes };
-  newBoxes[action.box] = value;
-  const gameOver = checkGameOver(newBoxes);
-  return { ...state, boxes: newBoxes, gameOver };
-};
+import { played } from "../../shared/gameLogic";
 
 const initialState = {
   boxes: {
@@ -34,33 +15,55 @@ const initialState = {
   },
   gameOver: false,
   gameStarted: false,
-};
-
-const checkGameOver = (boxes) => {
-  if (
-    areEqual(boxes.a1, boxes.a2, boxes.a3) ||
-    areEqual(boxes.b1, boxes.b2, boxes.b3) ||
-    areEqual(boxes.c1, boxes.c2, boxes.c3) ||
-    areEqual(boxes.a1, boxes.b1, boxes.c1) ||
-    areEqual(boxes.a2, boxes.b2, boxes.c2) ||
-    areEqual(boxes.a3, boxes.b3, boxes.c3) ||
-    areEqual(boxes.a1, boxes.b2, boxes.c3) ||
-    areEqual(boxes.a3, boxes.b2, boxes.c1)
-  ) {
-    return true;
-  }
-
-  for (let key in boxes) {
-    if (boxes[key] === "") {
-      return false;
-    }
-  }
-  return true;
+  won: null,
+  draw: false,
+  difficulty: "hard",
+  players: [
+    {
+      username: "Player One",
+      side: "X",
+    },
+    {
+      username: "Player Two",
+      side: "O",
+    },
+  ],
+  winner: null,
+  toPlay: "X",
 };
 
 const playedX = (state, action) => played(state, action, "X");
 
 const playedO = (state, action) => played(state, action, "O");
+
+const reset = (state, action) => {
+  return {
+    ...initialState,
+  };
+};
+
+//for now just toggling
+const setPlayers = (state, action) => {
+  let players;
+  state.players.length === 1
+    ? (players = [
+        {
+          username: "Player One",
+          side: "X",
+        },
+        {
+          username: "Player Two",
+          side: "O",
+        },
+      ])
+    : (players = [
+        {
+          username: "Player One",
+          side: "X",
+        },
+      ]);
+  return { ...state, players, gameStarted: true };
+};
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -68,6 +71,10 @@ const reducer = (state = initialState, action) => {
       return playedX(state, action);
     case actionTypes.PLAYED_O:
       return playedO(state, action);
+    case actionTypes.RESET:
+      return reset(state, action);
+    case actionTypes.SET_PLAYERS:
+      return setPlayers(state, action);
     default:
       return state;
   }
