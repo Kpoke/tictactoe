@@ -1,5 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
 import { played } from "../../shared/gameLogic";
+import { computerPlay } from "../../shared/GameEngine/computer";
 
 const initialState = {
   boxes: {
@@ -36,33 +37,36 @@ const playedX = (state, action) => played(state, action, "X");
 
 const playedO = (state, action) => played(state, action, "O");
 
-const reset = (state, action) => {
-  return {
-    ...initialState,
-  };
-};
-
 //for now just toggling
 const setPlayers = (state, action) => {
+  const sideArray = ["X", "O"];
+  const random = Math.floor(Math.random() * 2);
+  const side1 = sideArray[random];
+  const side2 = sideArray[1 - random];
   let players;
-  state.players.length === 1
+  action.number === 2
     ? (players = [
         {
           username: "Player One",
-          side: "X",
+          side: side1,
         },
         {
           username: "Player Two",
-          side: "O",
+          side: side2,
         },
       ])
     : (players = [
         {
           username: "Player One",
-          side: "X",
+          side: side1,
         },
       ]);
-  return { ...state, players, gameStarted: true };
+  if (players[0].side === "O" && players.length === 1) {
+    const boxes = computerPlay("X", initialState.boxes, state.difficulty);
+    return { ...initialState, players, gameStarted: true, boxes, toPlay: "O" };
+  }
+
+  return { ...initialState, players, gameStarted: true };
 };
 
 const reducer = (state = initialState, action) => {
@@ -71,8 +75,6 @@ const reducer = (state = initialState, action) => {
       return playedX(state, action);
     case actionTypes.PLAYED_O:
       return playedO(state, action);
-    case actionTypes.RESET:
-      return reset(state, action);
     case actionTypes.SET_PLAYERS:
       return setPlayers(state, action);
     default:

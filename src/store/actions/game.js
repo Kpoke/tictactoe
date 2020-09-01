@@ -14,14 +14,9 @@ export const playedO = (box) => {
   };
 };
 
-export const reset = () => {
-  return {
-    type: actionTypes.RESET,
-  };
-};
-
-export const setPlayers = () => {
+export const setPlayers = (number) => {
   return {
     type: actionTypes.SET_PLAYERS,
+    number,
   };
 };

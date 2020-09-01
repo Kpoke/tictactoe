@@ -1,4 +1,4 @@
-import { computerPlay } from "./computer";
+import { computerPlay, checkAvailable } from "./GameEngine/computer";
 import { areEqual } from "./utility";
 
 const switchToPlay = (toPlay) => {
@@ -69,10 +69,18 @@ const playLogic = (
   computer,
   difficulty
 ) => {
+  if (
+    checkAvailable(boxes).length === 9 &&
+    players[0].side === "O" &&
+    players.length === 1
+  ) {
+    return;
+  }
   let newBoxes = { ...boxes };
   newBoxes[box] = value;
   const result = checkGameOver(newBoxes, players, computer);
   const nextSide = switchToPlay(toPlay);
+
   if (computer && !result.gameOver) {
     const latestboxes = computerPlay(nextSide, newBoxes, difficulty);
     const checkResult = checkGameOver(latestboxes, players, computer);

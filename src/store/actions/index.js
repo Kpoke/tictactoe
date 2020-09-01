@@ -1,1 +1,1 @@
-export { playedO, playedX, reset, setPlayers } from "./game.js";
+export { playedO, playedX, setPlayers } from "./game.js";
