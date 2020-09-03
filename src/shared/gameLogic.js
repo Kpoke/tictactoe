@@ -1,9 +1,5 @@
 import { computerPlay, checkAvailable } from "./GameEngine/computer";
-import { areEqual } from "./utility";
-
-const switchToPlay = (toPlay) => {
-  return toPlay === "X" ? "O" : "X";
-};
+import { areEqual, otherSide as switchToPlay } from "./utility";
 
 const checkBoxes = (boxes) => {
   const winCombinationArray = [
@@ -27,7 +23,7 @@ const checkBoxes = (boxes) => {
   return null;
 };
 
-const findWinner = (players, side) => {
+export const findWinner = (players, side) => {
   for (let i = 0; i < players.length; i++) {
     if (players[i].side === side)
       return { winner: players[i], gameOver: true, gameStarted: false };

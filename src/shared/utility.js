@@ -7,3 +7,5 @@ export function areEqual() {
   }
   return [arguments[0], true];
 }
+
+export const otherSide = (side) => (side === "X" ? "O" : "X");

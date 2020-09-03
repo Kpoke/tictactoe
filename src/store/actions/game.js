@@ -20,3 +20,10 @@ export const setPlayers = (number) => {
     number,
   };
 };
+
+export const setWinnerDueToTime = (side) => {
+  return {
+    type: actionTypes.SET_WINNER,
+    side,
+  };
+};

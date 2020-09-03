@@ -1,5 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
-import { played } from "../../shared/gameLogic";
+import { played, findWinner } from "../../shared/gameLogic";
 import { computerPlay } from "../../shared/GameEngine/computer";
 
 const initialState = {
@@ -69,6 +69,10 @@ const setPlayers = (state, action) => {
   return { ...initialState, players, gameStarted: true };
 };
 
+const setWinner = (state, action) => {
+  return { ...state, ...findWinner(state.players, action.side) };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.PLAYED_X:
@@ -77,6 +81,8 @@ const reducer = (state = initialState, action) => {
       return playedO(state, action);
     case actionTypes.SET_PLAYERS:
       return setPlayers(state, action);
+    case actionTypes.SET_WINNER:
+      return setWinner(state, action);
     default:
       return state;
   }

@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import { otherSide } from "../../shared/utility";
+import Timer from "../Timer/Timer";
 import * as actions from "../../store/actions";
 import Box from "../Box/Box";
 import classes from "./Game.module.css";
@@ -19,6 +21,9 @@ const Game = () => {
   const playedO = useCallback((box) => dispatch(actions.playedO(box)), [
     dispatch,
   ]);
+
+  const clickHandler = (location) =>
+    toPlay === "X" ? playedX(location) : playedO(location);
 
   const setPlayers = useCallback(
     (number) => dispatch(actions.setPlayers(number)),
@@ -43,26 +48,34 @@ const Game = () => {
       >
         {players.length === 2
           ? `${players[1].username} is ${players[1].side}`
-          : `Computer is ${players[0].side === "X" ? "O" : "X"}`}
+          : `Computer is ${otherSide(players[0].side)}`}
+        <Timer
+          side={
+            players.length === 2
+              ? `${players[1].side}`
+              : `${otherSide(players[0].side)}`
+          }
+        />
       </h6>
+
       <div className={classes.row}>
         <Box
           loc="right bottom"
-          onClick={() => (toPlay === "X" ? playedX("a1") : playedO("a1"))}
+          onClick={() => clickHandler("a1")}
           disable={!gameStarted}
         >
           {boxes.a1}
         </Box>
         <Box
           loc="right bottom"
-          onClick={() => (toPlay === "X" ? playedX("a2") : playedO("a2"))}
+          onClick={() => clickHandler("a2")}
           disable={!gameStarted}
         >
           {boxes.a2}
         </Box>
         <Box
           loc="bottom"
-          onClick={() => (toPlay === "X" ? playedX("a3") : playedO("a3"))}
+          onClick={() => clickHandler("a3")}
           disable={!gameStarted}
         >
           {boxes.a3}
@@ -71,21 +84,21 @@ const Game = () => {
       <div className={classes.row}>
         <Box
           loc="right bottom"
-          onClick={() => (toPlay === "X" ? playedX("b1") : playedO("b1"))}
+          onClick={() => clickHandler("b1")}
           disable={!gameStarted}
         >
           {boxes.b1}
         </Box>
         <Box
           loc="right bottom"
-          onClick={() => (toPlay === "X" ? playedX("b2") : playedO("b2"))}
+          onClick={() => clickHandler("b2")}
           disable={!gameStarted}
         >
           {boxes.b2}
         </Box>
         <Box
           loc="bottom"
-          onClick={() => (toPlay === "X" ? playedX("b3") : playedO("b3"))}
+          onClick={() => clickHandler("b3")}
           disable={!gameStarted}
         >
           {boxes.b3}
@@ -94,29 +107,28 @@ const Game = () => {
       <div className={classes.row}>
         <Box
           loc="right"
-          onClick={() => (toPlay === "X" ? playedX("c1") : playedO("c1"))}
+          onClick={() => clickHandler("c1")}
           disable={!gameStarted}
         >
           {boxes.c1}
         </Box>
         <Box
           loc="right"
-          onClick={() => (toPlay === "X" ? playedX("c2") : playedO("c2"))}
+          onClick={() => clickHandler("c2")}
           disable={!gameStarted}
         >
           {boxes.c2}
         </Box>
-        <Box
-          onClick={() => (toPlay === "X" ? playedX("c3") : playedO("c3"))}
-          disable={!gameStarted}
-        >
+        <Box onClick={() => clickHandler("c3")} disable={!gameStarted}>
           {boxes.c3}
         </Box>
       </div>
+
       <h6
         className={classes.username}
         style={{ display: !gameStarted ? "none" : "block" }}
       >
+        <Timer side={players[0].side} />
         {players[0].username}, you're {players[0].side}
       </h6>
       <div style={{ display: gameStarted ? "none" : "block" }}>

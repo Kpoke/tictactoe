@@ -1,5 +1,6 @@
 import { DecisionTree } from "./decisionTree";
 import { data } from "./data";
+import { otherSide as opponentSide } from "../utility";
 
 const Tree = new DecisionTree(data);
 
@@ -50,7 +51,7 @@ export const checkAvailable = (boxes) => {
 };
 
 const winningBoxes = (boxes, toPlay, prevent) => {
-  const otherSide = toPlay === "X" ? "O" : "X";
+  const otherSide = opponentSide(toPlay);
   for (let i = 0; i < winCombinationArray.length; i++) {
     const comboArray = winCombinationArray[i];
     const values = [
@@ -76,7 +77,7 @@ const winningBoxes = (boxes, toPlay, prevent) => {
 };
 
 const checkKeyBoxes = (boxes, toPlay) => {
-  const otherSide = toPlay === "X" ? "O" : "X";
+  const otherSide = opponentSide(toPlay);
   for (const element of keyBoxesArray) {
     const [box1, box2, response] = element;
     if (boxes[box1] === otherSide && boxes[box2] === otherSide) return response;
