@@ -4,11 +4,12 @@ import { Provider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 
+import WebSocketProvider from "./WebSocket";
+
 import gameReducer from "./store/reducers/game";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
 
 const composeEnhancers =
   process.env.NODE_ENV === "development"
@@ -25,7 +26,9 @@ const store = createStore(
 
 const app = (
   <Provider store={store}>
-    <App />
+    <WebSocketProvider>
+      <App />
+    </WebSocketProvider>
   </Provider>
 );
 

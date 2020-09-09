@@ -1,6 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 import { played, findWinner } from "../../shared/gameLogic";
 import { computerPlay } from "../../shared/GameEngine/computer";
+import { otherSide } from "../../shared/utility";
 
 const initialState = {
   boxes: {
@@ -14,6 +15,8 @@ const initialState = {
     c2: "",
     c3: "",
   },
+  username: "Testing t",
+  opponentId: null,
   gameOver: false,
   gameStarted: false,
   won: null,
@@ -33,11 +36,8 @@ const initialState = {
   toPlay: "X",
 };
 
-const playedX = (state, action) => played(state, action, "X");
+const play = (state, action) => played(state, action);
 
-const playedO = (state, action) => played(state, action, "O");
-
-//for now just toggling
 const setPlayers = (state, action) => {
   const sideArray = ["X", "O"];
   const random = Math.floor(Math.random() * 2);
@@ -69,20 +69,35 @@ const setPlayers = (state, action) => {
   return { ...initialState, players, gameStarted: true };
 };
 
+const setOnlinePlayers = (state, action) => {
+  const mySide = otherSide(action.side);
+  let players = [
+    {
+      username: state.username,
+      side: mySide,
+    },
+    {
+      username: action.username,
+      side: action.side,
+    },
+  ];
+  return { ...initialState, players, gameStarted: true, opponentId: action.id };
+};
+
 const setWinner = (state, action) => {
   return { ...state, ...findWinner(state.players, action.side) };
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.PLAYED_X:
-      return playedX(state, action);
-    case actionTypes.PLAYED_O:
-      return playedO(state, action);
+    case actionTypes.PLAYED:
+      return play(state, action);
     case actionTypes.SET_PLAYERS:
       return setPlayers(state, action);
     case actionTypes.SET_WINNER:
       return setWinner(state, action);
+    case actionTypes.SET_ONLINE_PLAYERS:
+      return setOnlinePlayers(state, action);
     default:
       return state;
   }

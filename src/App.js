@@ -1,12 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import Game from "./components/Game/Game"
+import Game from "./components/Game/Game";
 
 const App = () => {
-  return <div>
-    <Game />
-  </div>
-  
-}
+  return (
+    <div>
+      <Game />
+    </div>
+  );
+};
 
 export default App;

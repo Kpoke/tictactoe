@@ -1,6 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import { WebSocketContext } from "../../WebSocket";
 import { otherSide } from "../../shared/utility";
 import Timer from "../Timer/Timer";
 import * as actions from "../../store/actions";
@@ -8,22 +9,25 @@ import Box from "../Box/Box";
 import classes from "./Game.module.css";
 
 const Game = () => {
+  const ws = useContext(WebSocketContext);
   const dispatch = useDispatch();
   const boxes = useSelector((state) => state.game.boxes);
-  const { gameOver, toPlay, winner, draw, players, gameStarted } = useSelector(
-    (state) => state.game
-  );
+  const {
+    gameOver,
+    toPlay,
+    winner,
+    draw,
+    players,
+    gameStarted,
+    username,
+  } = useSelector((state) => state.game);
 
-  const playedX = useCallback((box) => dispatch(actions.playedX(box)), [
-    dispatch,
-  ]);
-
-  const playedO = useCallback((box) => dispatch(actions.playedO(box)), [
+  const played = useCallback((box) => dispatch(actions.played(box)), [
     dispatch,
   ]);
 
   const clickHandler = (location) =>
-    toPlay === "X" ? playedX(location) : playedO(location);
+    toPlay === "X" ? played(location, "X") : played(location, "O");
 
   const setPlayers = useCallback(
     (number) => dispatch(actions.setPlayers(number)),
@@ -137,6 +141,9 @@ const Game = () => {
         </button>
         <button onClick={() => setPlayers(2)} style={{ margin: 20 }}>
           Pass and Play
+        </button>
+        <button onClick={() => ws.setPlayers(username)} style={{ margin: 20 }}>
+          Play online
         </button>
       </div>
     </div>

@@ -29,7 +29,7 @@ const Timer = ({ side }) => {
     gameStarted && toPlay === side ? start() : pause();
     gameOver && pause();
   }, [gameStarted, gameOver, start, pause, reset, toPlay, side, time]);
-  return <h4>{time}</h4>;
+  return <div>{time}</div>;
 };
 
 export default Timer;

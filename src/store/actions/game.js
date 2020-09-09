@@ -1,16 +1,10 @@
 import * as actionTypes from "./actionTypes";
 
-export const playedX = (box) => {
+export const played = (box, side) => {
   return {
-    type: actionTypes.PLAYED_X,
+    type: actionTypes.PLAYED,
     box,
-  };
-};
-
-export const playedO = (box) => {
-  return {
-    type: actionTypes.PLAYED_O,
-    box,
+    side,
   };
 };
 
@@ -18,6 +12,15 @@ export const setPlayers = (number) => {
   return {
     type: actionTypes.SET_PLAYERS,
     number,
+  };
+};
+
+export const setOnlinePlayers = ({ id, username, side }) => {
+  return {
+    type: actionTypes.SET_ONLINE_PLAYERS,
+    id,
+    username,
+    side,
   };
 };
 

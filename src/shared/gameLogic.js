@@ -56,15 +56,7 @@ const checkGameOver = (boxes, players, computer) => {
   return { gameOver: true, draw: true, gameStarted: false };
 };
 
-const playLogic = (
-  boxes,
-  box,
-  value,
-  players,
-  toPlay,
-  computer,
-  difficulty
-) => {
+const playLogic = (boxes, box, players, toPlay, computer, difficulty) => {
   if (
     checkAvailable(boxes).length === 9 &&
     players[0].side === "O" &&
@@ -73,7 +65,7 @@ const playLogic = (
     return;
   }
   let newBoxes = { ...boxes };
-  newBoxes[box] = value;
+  newBoxes[box] = toPlay;
   const result = checkGameOver(newBoxes, players, computer);
   const nextSide = switchToPlay(toPlay);
 
@@ -86,7 +78,7 @@ const playLogic = (
   return { ...result, boxes: newBoxes, toPlay: nextSide };
 };
 
-export const played = (state, action, value) => {
+export const played = (state, action) => {
   if (state.gameOver || !(state.boxes[action.box] === "")) {
     return state;
   }
@@ -94,7 +86,6 @@ export const played = (state, action, value) => {
     const result = playLogic(
       state.boxes,
       action.box,
-      value,
       state.players,
       state.toPlay,
       true,
@@ -105,7 +96,6 @@ export const played = (state, action, value) => {
   const result = playLogic(
     state.boxes,
     action.box,
-    value,
     state.players,
     state.toPlay,
     false

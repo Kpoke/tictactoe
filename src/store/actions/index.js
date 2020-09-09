@@ -1,1 +1,6 @@
-export { playedO, playedX, setPlayers, setWinnerDueToTime } from "./game.js";
+export {
+  played,
+  setPlayers,
+  setWinnerDueToTime,
+  setOnlinePlayers,
+} from "./game.js";
