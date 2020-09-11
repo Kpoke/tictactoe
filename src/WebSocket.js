@@ -1,18 +1,22 @@
 import React, { createContext, useCallback } from "react";
-import io from "socket.io-client";
 import * as actions from "./store/actions/index";
-import { WS_BASE } from "./config";
-import { useDispatch } from "react-redux";
+import { socket } from "./config";
+import { useDispatch, useSelector } from "react-redux";
 
 const WebSocketContext = createContext(null);
 
 export { WebSocketContext };
 
 export default ({ children }) => {
-  let socket;
   let ws;
 
   const dispatch = useDispatch();
+
+  const { toPlay, players, opponentId } = useSelector((state) => state.game);
+
+  const played = useCallback((box) => dispatch(actions.played(box)), [
+    dispatch,
+  ]);
   const setOnlinePlayers = useCallback(
     (opponent) => dispatch(actions.setOnlinePlayers(opponent)),
     [dispatch]
@@ -22,23 +26,22 @@ export default ({ children }) => {
     socket.emit("setPlayers", username);
   };
 
-  const play = (box, side) => {
-    socket.emit("play", { box, side });
-    dispatch();
+  const play = (box) => {
+    if (toPlay === players[0].side) {
+      socket.emit("play", { box, opponentId });
+      played(box);
+    }
   };
 
-  if (!socket) {
-    socket = io.connect(WS_BASE);
+  socket.on("matched", (opponent) => {
+    setOnlinePlayers(opponent);
+  });
 
-    socket.on("matched", (opponent) => {
-      setOnlinePlayers(opponent);
-    });
-    ws = {
-      socket,
-      play,
-      setPlayers,
-    };
-  }
+  socket.on("play", (box) => played(box));
+  ws = {
+    play,
+    setPlayers,
+  };
 
   return (
     <WebSocketContext.Provider value={ws}>{children}</WebSocketContext.Provider>

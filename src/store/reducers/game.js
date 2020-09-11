@@ -15,6 +15,7 @@ const initialState = {
     c2: "",
     c3: "",
   },
+  onlineGame: false,
   username: "Testing t",
   opponentId: null,
   gameOver: false,
@@ -81,7 +82,13 @@ const setOnlinePlayers = (state, action) => {
       side: action.side,
     },
   ];
-  return { ...initialState, players, gameStarted: true, opponentId: action.id };
+  return {
+    ...initialState,
+    players,
+    gameStarted: true,
+    onlineGame: true,
+    opponentId: action.id,
+  };
 };
 
 const setWinner = (state, action) => {

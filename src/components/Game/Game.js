@@ -8,26 +8,27 @@ import * as actions from "../../store/actions";
 import Box from "../Box/Box";
 import classes from "./Game.module.css";
 
-const Game = () => {
+const Game = ({ callback }) => {
   const ws = useContext(WebSocketContext);
   const dispatch = useDispatch();
   const boxes = useSelector((state) => state.game.boxes);
   const {
     gameOver,
-    toPlay,
+    onlineGame,
     winner,
     draw,
     players,
     gameStarted,
     username,
   } = useSelector((state) => state.game);
+  const isAuthenticated = useSelector((state) => state.auth.token !== null);
 
   const played = useCallback((box) => dispatch(actions.played(box)), [
     dispatch,
   ]);
 
   const clickHandler = (location) =>
-    toPlay === "X" ? played(location, "X") : played(location, "O");
+    onlineGame ? ws.play(location) : played(location);
 
   const setPlayers = useCallback(
     (number) => dispatch(actions.setPlayers(number)),
@@ -42,7 +43,9 @@ const Game = () => {
           </div>
         ) : (
           <div>
-            <h6 style={{ margin: 20 }}>{winner.username} won</h6>
+            <h6 style={{ margin: 20 }}>
+              {winner.username} won {winner.side}
+            </h6>
           </div>
         )
       ) : null}
@@ -53,13 +56,7 @@ const Game = () => {
         {players.length === 2
           ? `${players[1].username} is ${players[1].side}`
           : `Computer is ${otherSide(players[0].side)}`}
-        <Timer
-          side={
-            players.length === 2
-              ? `${players[1].side}`
-              : `${otherSide(players[0].side)}`
-          }
-        />
+        {onlineGame ? <Timer side={`${players[1].side}`} /> : null}
       </h6>
 
       <div className={classes.row}>
@@ -132,7 +129,7 @@ const Game = () => {
         className={classes.username}
         style={{ display: !gameStarted ? "none" : "block" }}
       >
-        <Timer side={players[0].side} />
+        {onlineGame ? <Timer side={players[0].side} /> : null}
         {players[0].username}, you're {players[0].side}
       </h6>
       <div style={{ display: gameStarted ? "none" : "block" }}>
@@ -142,7 +139,12 @@ const Game = () => {
         <button onClick={() => setPlayers(2)} style={{ margin: 20 }}>
           Pass and Play
         </button>
-        <button onClick={() => ws.setPlayers(username)} style={{ margin: 20 }}>
+        <button
+          onClick={() =>
+            isAuthenticated ? ws.setPlayers(username) : callback(true)
+          }
+          style={{ margin: 20 }}
+        >
           Play online
         </button>
       </div>
