@@ -19,9 +19,8 @@ const Game = ({ callback }) => {
     draw,
     players,
     gameStarted,
-    username,
   } = useSelector((state) => state.game);
-  const isAuthenticated = useSelector((state) => state.auth.token !== null);
+  const { user } = useSelector((state) => state.auth);
 
   const played = useCallback((box) => dispatch(actions.played(box)), [
     dispatch,
@@ -43,9 +42,7 @@ const Game = ({ callback }) => {
           </div>
         ) : (
           <div>
-            <h6 style={{ margin: 20 }}>
-              {winner.username} won {winner.side}
-            </h6>
+            <h6 style={{ margin: 20 }}>{winner.username} won</h6>
           </div>
         )
       ) : null}
@@ -59,70 +56,72 @@ const Game = ({ callback }) => {
         {onlineGame ? <Timer side={`${players[1].side}`} /> : null}
       </h6>
 
-      <div className={classes.row}>
-        <Box
-          loc="right bottom"
-          onClick={() => clickHandler("a1")}
-          disable={!gameStarted}
-        >
-          {boxes.a1}
-        </Box>
-        <Box
-          loc="right bottom"
-          onClick={() => clickHandler("a2")}
-          disable={!gameStarted}
-        >
-          {boxes.a2}
-        </Box>
-        <Box
-          loc="bottom"
-          onClick={() => clickHandler("a3")}
-          disable={!gameStarted}
-        >
-          {boxes.a3}
-        </Box>
-      </div>
-      <div className={classes.row}>
-        <Box
-          loc="right bottom"
-          onClick={() => clickHandler("b1")}
-          disable={!gameStarted}
-        >
-          {boxes.b1}
-        </Box>
-        <Box
-          loc="right bottom"
-          onClick={() => clickHandler("b2")}
-          disable={!gameStarted}
-        >
-          {boxes.b2}
-        </Box>
-        <Box
-          loc="bottom"
-          onClick={() => clickHandler("b3")}
-          disable={!gameStarted}
-        >
-          {boxes.b3}
-        </Box>
-      </div>
-      <div className={classes.row}>
-        <Box
-          loc="right"
-          onClick={() => clickHandler("c1")}
-          disable={!gameStarted}
-        >
-          {boxes.c1}
-        </Box>
-        <Box
-          loc="right"
-          onClick={() => clickHandler("c2")}
-          disable={!gameStarted}
-        >
-          {boxes.c2}
-        </Box>
-        <Box onClick={() => clickHandler("c3")} disable={!gameStarted}>
-          {boxes.c3}
-        </Box>
+      <div className={classes.board}>
+        <div className={classes.row}>
+          <Box
+            loc="right bottom"
+            onClick={() => clickHandler("a1")}
+            disable={!gameStarted}
+          >
+            {boxes.a1}
+          </Box>
+          <Box
+            loc="right bottom"
+            onClick={() => clickHandler("a2")}
+            disable={!gameStarted}
+          >
+            {boxes.a2}
+          </Box>
+          <Box
+            loc="bottom"
+            onClick={() => clickHandler("a3")}
+            disable={!gameStarted}
+          >
+            {boxes.a3}
+          </Box>
+        </div>
+        <div className={classes.row}>
+          <Box
+            loc="right bottom"
+            onClick={() => clickHandler("b1")}
+            disable={!gameStarted}
+          >
+            {boxes.b1}
+          </Box>
+          <Box
+            loc="right bottom"
+            onClick={() => clickHandler("b2")}
+            disable={!gameStarted}
+          >
+            {boxes.b2}
+          </Box>
+          <Box
+            loc="bottom"
+            onClick={() => clickHandler("b3")}
+            disable={!gameStarted}
+          >
+            {boxes.b3}
+          </Box>
+        </div>
+        <div className={classes.row}>
+          <Box
+            loc="right"
+            onClick={() => clickHandler("c1")}
+            disable={!gameStarted}
+          >
+            {boxes.c1}
+          </Box>
+          <Box
+            loc="right"
+            onClick={() => clickHandler("c2")}
+            disable={!gameStarted}
+          >
+            {boxes.c2}
+          </Box>
+          <Box onClick={() => clickHandler("c3")} disable={!gameStarted}>
+            {boxes.c3}
+          </Box>
+        </div>
       </div>
 
       <h6
@@ -140,9 +139,7 @@ const Game = ({ callback }) => {
           Pass and Play
         </button>
         <button
-          onClick={() =>
-            isAuthenticated ? ws.setPlayers(username) : callback(true)
-          }
+          onClick={() => ws.setPlayers(user, callback)}
           style={{ margin: 20 }}
         >
           Play online

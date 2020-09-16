@@ -49,13 +49,6 @@ export const auth = (authData, isSignup) => {
   };
 };
 
-// export const setAuthRedirectPath = (path) => {
-//   return {
-//     type: actionTypes.SET_AUTH_REDIRECT_PATH,
-//     path,
-//   };
-// };
-
 export const authCheckState = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");

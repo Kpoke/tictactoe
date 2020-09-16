@@ -1,16 +1,12 @@
-import React, { useEffect, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
 
-import * as actions from "../../store/actions";
+import { WebSocketContext } from "../../WebSocket";
 import { otherSide } from "../../shared/utility";
 import useTimer from "../../hooks/useTimer";
 
 const Timer = ({ side }) => {
-  const dispatch = useDispatch();
-  const setWinnerDueToTime = useCallback(
-    (side) => dispatch(actions.setWinnerDueToTime(side)),
-    [dispatch]
-  );
+  const ws = useContext(WebSocketContext);
   const { toPlay, gameStarted, gameOver } = useSelector((state) => state.game);
   const [time, start, pause, reset] = useTimer(10);
 
@@ -20,10 +16,10 @@ const Timer = ({ side }) => {
 
   useEffect(() => {
     if (time === 0 && gameStarted) {
-      setWinnerDueToTime(otherSide(side));
+      ws.fixWinner(otherSide(side));
       reset();
     }
-  }, [gameStarted, setWinnerDueToTime, side, time, reset]);
+  }, [gameStarted, ws, side, time, reset]);
 
   useEffect(() => {
     gameStarted && toPlay === side ? start() : pause();

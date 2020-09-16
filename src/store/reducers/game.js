@@ -22,7 +22,6 @@ const initialState = {
   gameStarted: false,
   won: null,
   draw: false,
-  difficulty: "hard",
   players: [
     {
       username: "Player One",
@@ -35,6 +34,9 @@ const initialState = {
   ],
   winner: null,
   toPlay: "X",
+  leaders: [],
+  error: false,
+  loading: false,
 };
 
 const play = (state, action) => played(state, action);
@@ -63,36 +65,61 @@ const setPlayers = (state, action) => {
         },
       ]);
   if (players[0].side === "O" && players.length === 1) {
-    const boxes = computerPlay("X", initialState.boxes, state.difficulty);
-    return { ...initialState, players, gameStarted: true, boxes, toPlay: "O" };
+    const boxes = computerPlay("X", initialState.boxes);
+    return {
+      ...initialState,
+      leaders: state.leaders,
+      players,
+      gameStarted: true,
+      boxes,
+      toPlay: "O",
+    };
   }
 
-  return { ...initialState, players, gameStarted: true };
+  return {
+    ...initialState,
+    leaders: state.leaders,
+    players,
+    gameStarted: true,
+  };
 };
 
 const setOnlinePlayers = (state, action) => {
-  const mySide = otherSide(action.side);
+  const mySide = otherSide(action.opponentSide);
   let players = [
     {
-      username: state.username,
+      username: action.username,
       side: mySide,
     },
     {
-      username: action.username,
-      side: action.side,
+      username: action.opponentUsername,
+      side: action.opponentSide,
     },
   ];
   return {
     ...initialState,
     players,
+    leaders: state.leaders,
     gameStarted: true,
     onlineGame: true,
-    opponentId: action.id,
+    opponentId: action.opponentId,
   };
 };
 
 const setWinner = (state, action) => {
   return { ...state, ...findWinner(state.players, action.side) };
+};
+
+const setLeaderboard = (state, action) => {
+  return { ...state, leaders: action.leaders, error: false, loading: false };
+};
+
+const leaderboardStart = (state, action) => {
+  return { ...state, loading: true };
+};
+
+const leaderboardFailed = (state, action) => {
+  return { ...state, loading: false, error: true };
 };
 
 const reducer = (state = initialState, action) => {
@@ -105,6 +132,12 @@ const reducer = (state = initialState, action) => {
       return setWinner(state, action);
     case actionTypes.SET_ONLINE_PLAYERS:
       return setOnlinePlayers(state, action);
+    case actionTypes.SET_LEADERBOARD:
+      return setLeaderboard(state, action);
+    case actionTypes.LEADERBOARD_START:
+      return leaderboardStart(state, action);
+    case actionTypes.LEADERBOARD_FAILED:
+      return leaderboardFailed(state, action);
     default:
       return state;
   }

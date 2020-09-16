@@ -1,8 +1,9 @@
 export {
   played,
   setPlayers,
-  setWinnerDueToTime,
+  setWinner,
   setOnlinePlayers,
+  fetchLeaderboard,
 } from "./game.js";
 
 export { auth, logout, authCheckState } from "./auth";

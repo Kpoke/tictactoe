@@ -4,6 +4,8 @@ import { otherSide as opponentSide } from "../utility";
 
 const Tree = new DecisionTree(data);
 
+//error you found from sis playing your computer
+
 const cornerBoxes = ["a1", "a3", "c1", "c3"];
 const adjacentBoxes = ["a2", "b1", "b3", "c2"];
 const keyBoxesArray = [
@@ -92,14 +94,15 @@ const checkKeyBoxes = (boxes, toPlay) => {
     if (boxes[box1] === otherSide && boxes[box2] === otherSide)
       return cornerBoxes[randomIndex(cornerBoxes.length)];
   }
+
+  for (const element of cornerBoxes) {
+    if (boxes[element] === otherSide && boxes["b2"] === otherSide)
+      return cornerBoxes[randomIndex(cornerBoxes.length)];
+  }
 };
 
-const openingO = (boxes, difficulty, freeBoxes) => {
-  return difficulty === "easy"
-    ? freeBoxes[randomIndex(freeBoxes.length)]
-    : boxes.b2 === ""
-    ? "b2"
-    : cornerBoxes[randomIndex(cornerBoxes.length)];
+const openingO = (boxes) => {
+  return boxes.b2 === "" ? "b2" : cornerBoxes[randomIndex(cornerBoxes.length)];
 };
 
 const checkIfBoxAvailable = (box, freeBoxes) => {
@@ -119,9 +122,8 @@ const getPlayedXBoxes = (boxes) => {
   return playedXBoxes;
 };
 
-const playingAsX = (boxes, freeBoxes, difficulty) => {
-  if (freeBoxes.length === 9 || difficulty === "easy")
-    return freeBoxes[randomIndex(freeBoxes.length)];
+const playingAsX = (boxes, freeBoxes) => {
+  if (freeBoxes.length === 9) return freeBoxes[randomIndex(freeBoxes.length)];
 
   if (freeBoxes.length === 7) {
     for (let key in boxes) {
@@ -158,7 +160,7 @@ const playingAsX = (boxes, freeBoxes, difficulty) => {
   return freeBoxes[randomIndex(freeBoxes.length)];
 };
 
-export const computerPlay = (toPlay, boxes, difficulty) => {
+export const computerPlay = (toPlay, boxes) => {
   const play = (box) => {
     const newBoxes = { ...boxes };
     newBoxes[box] = toPlay;
@@ -173,12 +175,11 @@ export const computerPlay = (toPlay, boxes, difficulty) => {
   const preventLossBox = winningBoxes(boxes, toPlay, true);
   if (preventLossBox) return play(preventLossBox);
 
-  if (toPlay === "X") return play(playingAsX(boxes, freeBoxes, difficulty));
+  if (toPlay === "X") return play(playingAsX(boxes, freeBoxes));
 
-  if (freeBoxes.length === 8)
-    return play(openingO(boxes, difficulty, freeBoxes));
+  if (freeBoxes.length === 8) return play(openingO(boxes, freeBoxes));
 
-  if (freeBoxes.length === 6 && difficulty === "hard") {
+  if (freeBoxes.length === 6) {
     const keyBox = checkKeyBoxes(boxes, toPlay);
     if (keyBox) {
       return play(keyBox);

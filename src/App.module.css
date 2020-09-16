@@ -1,0 +1,26 @@
+.container {
+  text-align: center;
+  margin: auto;
+  box-sizing: border-box;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+}
+
+.button {
+  text-align: right;
+}
+
+.gridContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: auto;
+  justify-items: center;
+}
+
+.section {
+  width: 100%;
+}

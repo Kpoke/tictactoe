@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import Input from "../../components/UI/Input/input";
@@ -9,6 +9,13 @@ import * as actions from "../../store/actions/index";
 import { checkValidity } from "../../shared/utility";
 
 const Auth = ({ callback }) => {
+  const isAuthenticated = useSelector((state) => state.auth.token !== null);
+  useEffect(() => {
+    if (isAuthenticated) {
+      callback(false);
+    }
+  }, [isAuthenticated, callback]);
+
   const [authForm, setAuthForm] = useState([
     {
       label: "Username",
@@ -44,7 +51,6 @@ const Auth = ({ callback }) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.token !== null);
   const loading = useSelector((state) => state.auth.loading);
   const error = useSelector((state) => state.auth.error);
   const auth = useCallback(
@@ -123,14 +129,11 @@ const Auth = ({ callback }) => {
     errorMessage = <p>{error}</p>;
   }
 
-  let authRedirect = null;
-  if (isAuthenticated) {
-    callback(false);
-  }
-
   return (
     <div className={classes.Auth}>
-      {authRedirect}
+      <div style={{ textAlign: "right" }}>
+        <button onClick={() => callback(false)}>X</button>
+      </div>
       {errorMessage}
       {form}
       <Button onClick={switchAuthModeHandler} btnType="Danger">

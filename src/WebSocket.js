@@ -1,4 +1,4 @@
-import React, { createContext, useCallback } from "react";
+import React, { createContext, useCallback, useEffect } from "react";
 import * as actions from "./store/actions/index";
 import { socket } from "./config";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,18 +12,48 @@ export default ({ children }) => {
 
   const dispatch = useDispatch();
 
-  const { toPlay, players, opponentId } = useSelector((state) => state.game);
+  const { toPlay, players, opponentId, winner, onlineGame } = useSelector(
+    (state) => state.game
+  );
+  const fetchLeaderboard = useCallback(
+    () => dispatch(actions.fetchLeaderboard()),
+    [dispatch]
+  );
+  const isAuthenticated = useSelector((state) => state.auth.token !== null);
+  const { user, token } = useSelector((state) => state.auth);
 
   const played = useCallback((box) => dispatch(actions.played(box)), [
     dispatch,
   ]);
+
   const setOnlinePlayers = useCallback(
-    (opponent) => dispatch(actions.setOnlinePlayers(opponent)),
+    (username, opponent) =>
+      dispatch(actions.setOnlinePlayers(username, opponent)),
     [dispatch]
   );
 
-  const setPlayers = (username) => {
-    socket.emit("setPlayers", username);
+  const setWinner = useCallback((side) => dispatch(actions.setWinner(side)), [
+    dispatch,
+  ]);
+
+  useEffect(() => {
+    if (winner && user && onlineGame) {
+      if (winner.username === user.username) {
+        socket.emit("updateuserpoints", token);
+      }
+    }
+  }, [token, user, winner, onlineGame]);
+
+  //socket functions
+  const fixWinner = (side) => {
+    if (isAuthenticated) {
+      socket.emit("winner", side);
+    }
+    setWinner(side);
+  };
+
+  const setPlayers = (user, callback) => {
+    isAuthenticated ? socket.emit("setPlayers", user.username) : callback(true);
   };
 
   const play = (box) => {
@@ -34,13 +64,21 @@ export default ({ children }) => {
   };
 
   socket.on("matched", (opponent) => {
-    setOnlinePlayers(opponent);
+    if (user) setOnlinePlayers(user.username, opponent);
   });
 
   socket.on("play", (box) => played(box));
+
+  socket.on("updated", () => {
+    fetchLeaderboard();
+  });
+
+  socket.on("an error", (error) => console.log(error));
+
   ws = {
     play,
     setPlayers,
+    fixWinner,
   };
 
   return (
