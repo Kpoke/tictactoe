@@ -1,14 +1,16 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { WebSocketContext } from "../../WebSocket";
 import { otherSide } from "../../shared/utility";
+import PreGame from "../PreGame/PreGame";
 import Timer from "../Timer/Timer";
-import * as actions from "../../store/actions";
 import Box from "../Box/Box";
+import * as actions from "../../store/actions";
 import classes from "./Game.module.css";
 
 const Game = ({ callback }) => {
+  const [showPreGame, setShowPreGame] = useState(false);
   const ws = useContext(WebSocketContext);
   const dispatch = useDispatch();
   const boxes = useSelector((state) => state.game.boxes);
@@ -35,6 +37,12 @@ const Game = ({ callback }) => {
   );
   return (
     <div className={classes.container}>
+      {showPreGame ? (
+        <div className={classes.preGame}>
+          <PreGame showPreGame={setShowPreGame} />
+        </div>
+      ) : null}
+
       {gameOver ? (
         draw ? (
           <div>
@@ -139,7 +147,7 @@ const Game = ({ callback }) => {
           Pass and Play
         </button>
         <button
-          onClick={() => ws.setPlayers(user, callback)}
+          onClick={() => ws.setPlayers(user, callback, setShowPreGame)}
           style={{ margin: 20 }}
         >
           Play online

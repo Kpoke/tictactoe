@@ -1,36 +1,35 @@
 .Button {
-    display: block border 0;
-    margin: 1em auto;
-    padding: .75em 1em;
-    font-size: 1em;
-    color: #fff;
-    font-weight: 500;
-    text-transform: uppercase;
-    font-family: "$sans";
-    cursor: pointer
+  display: block border 0;
+  margin: 1em auto;
+  padding: 0.75em 1em;
+  font-size: 1em;
+  color: #fff;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-family: "$sans";
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .Small {
-
-    width: 80px;
-    height: 40px;
-    margin: auto;
-    padding: 2px 2px;
-    font-size: small;
-    text-transform: capitalize;
-    font-weight: 700;
+  width: 70px;
+  height: 30px;
+  margin: auto;
+  padding: 2px 2px;
+  font-size: small;
+  text-transform: capitalize;
+  font-weight: 800;
 }
 
-
 .Button:disabled {
-    color: #ccc;
-    cursor: not-allowed;
+  color: #ccc;
+  cursor: not-allowed;
 }
 
 .Success {
-    color: #5C9210;
+  color: #5c9210;
 }
 
 .Danger {
-    background-color: #c34d41;
+  background-color: #c34d41;
 }

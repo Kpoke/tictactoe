@@ -26,12 +26,6 @@ export default ({ children }) => {
     dispatch,
   ]);
 
-  const setOnlinePlayers = useCallback(
-    (username, opponent) =>
-      dispatch(actions.setOnlinePlayers(username, opponent)),
-    [dispatch]
-  );
-
   const setWinner = useCallback((side) => dispatch(actions.setWinner(side)), [
     dispatch,
   ]);
@@ -52,8 +46,13 @@ export default ({ children }) => {
     setWinner(side);
   };
 
-  const setPlayers = (user, callback) => {
-    isAuthenticated ? socket.emit("setPlayers", user.username) : callback(true);
+  const setPlayers = (user, showAuthForm, showLoading) => {
+    if (isAuthenticated) {
+      showLoading(true);
+      socket.emit("setPlayers", user.username);
+    } else {
+      showAuthForm(true);
+    }
   };
 
   const play = (box) => {
@@ -62,10 +61,6 @@ export default ({ children }) => {
       played(box);
     }
   };
-
-  socket.on("matched", (opponent) => {
-    if (user) setOnlinePlayers(user.username, opponent);
-  });
 
   socket.on("play", (box) => played(box));
 

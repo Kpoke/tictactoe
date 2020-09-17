@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as actions from "./store/actions";
+import Button from "./components/UI/Button/button";
 import Game from "./components/Game/Game";
 import Auth from "./components/Auth/Auth";
 import Leaderboard from "./components/Leaderboard/Leaderboard";
@@ -29,7 +30,9 @@ const App = () => {
             style={{ display: isAuthenticated ? "block" : "none" }}
             className={classes.button}
           >
-            <button onClick={logout}>Logout</button>
+            <Button onClick={logout} size="Small" btnType="Success">
+              Logout
+            </Button>
           </div>
           <div className={classes.gridContainer}>
             <div className={classes.section}>
