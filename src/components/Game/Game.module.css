@@ -1,15 +1,13 @@
-.container {
-  border: 1px solid black;
-  width: 100%;
-  height: 100%;
+.miniHeaders {
+  color: rgb(30, 56, 25);
+  font-weight: 700;
+  font-size: 15px;
+  text-align: center;
 }
 
 .board {
-  margin: 29px;
-}
-
-.row {
   display: flex;
+  justify-content: center;
 }
 
 .preGame {
@@ -19,4 +17,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
+}
+
+.buttons {
+  margin: 30px;
 }

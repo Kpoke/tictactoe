@@ -1,0 +1,11 @@
+.board {
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px rgb(48, 148, 61);
+  box-sizing: border-box;
+  margin: 20px;
+  width: fit-content;
+}
+
+.row {
+  display: flex;
+}

@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import useTimer from "../../hooks/useTimer";
 import { socket } from "../../config";
 import * as actions from "../../store/actions";
+import Button from "../UI/Button/button";
 import Loading from "../UI/Spinner/LoadingIndicator";
 import classes from "./PreGame.module.css";
 
@@ -45,7 +46,13 @@ const Leaderboard = ({ showPreGame }) => {
         <div>
           <Loading />
           <p>Searching for Opponents</p>
-          <button onClick={() => showPreGame(false)}>cancel</button>
+          <Button
+            btnType="Success"
+            size="Small"
+            onClick={() => showPreGame(false)}
+          >
+            cancel
+          </Button>
         </div>
       )}
     </div>

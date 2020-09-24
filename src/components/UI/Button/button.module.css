@@ -12,10 +12,10 @@
 }
 
 .Small {
-  width: 70px;
+  width: fit-content;
   height: 30px;
   margin: auto;
-  padding: 2px 2px;
+  padding: 5px;
   font-size: small;
   text-transform: capitalize;
   font-weight: 800;

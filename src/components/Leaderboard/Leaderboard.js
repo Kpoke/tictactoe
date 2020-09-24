@@ -16,18 +16,25 @@ const Leaderboard = () => {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
   let toShow = loading ? (
-    <Loading />
+    <div style={{ textAlign: "center" }}>
+      <Loading />
+    </div>
   ) : error ? (
     <div>An Error Occurred</div>
   ) : (
-    leaders.map((leader) => (
-      <div key={leader._id}>{`${leader.username} ${leader.points}`}</div>
-    ))
+    <div className={classes.list}>
+      {leaders.map((leader) => (
+        <div key={leader._id} className={classes.item}>
+          <div className={classes.username}>{leader.username}</div>
+          <div className={classes.points}>{leader.points}</div>
+        </div>
+      ))}
+    </div>
   );
-  //   console.log(leaders);
+
   return (
     <div className={classes.container}>
-      <h3> Top 100 Leaderboard</h3>
+      <h3 className={classes.header}> Top 100 Leaderboard</h3>
       {toShow}
     </div>
   );

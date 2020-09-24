@@ -1,3 +1,29 @@
-.container {
-  border: 1px solid black;
+.header {
+  color: rgb(30, 56, 25);
+  text-align: center;
+}
+
+.list {
+  padding: 5px;
+  margin: 0 auto;
+  height: 300px;
+  width: 70%;
+  overflow: auto;
+}
+
+.username {
+  float: left;
+  font-weight: 700;
+}
+
+.points {
+  text-align: right;
+  font-weight: 700;
+}
+
+.item {
+  padding: 10px;
+  border-bottom: 1px solid black;
+  box-shadow: 0 2px 2px rgb(48, 148, 61);
+  box-sizing: border-box;
 }

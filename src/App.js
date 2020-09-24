@@ -30,12 +30,13 @@ const App = () => {
             style={{ display: isAuthenticated ? "block" : "none" }}
             className={classes.button}
           >
-            <Button onClick={logout} size="Small" btnType="Success">
+            <Button onClick={logout} size="Small" btnType="Danger">
               Logout
             </Button>
           </div>
           <div className={classes.gridContainer}>
             <div className={classes.section}>
+              <h2 className={classes.header}>TicTacToe Online</h2>
               <Game callback={setShowAuthForm} />
             </div>
             <div className={classes.section}>

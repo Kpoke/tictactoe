@@ -47,3 +47,6 @@ export const checkValidity = (value, rules) => {
 
   return isValid;
 };
+
+export const conditionalRender = (boolean, toRender) =>
+  boolean ? toRender : null;
