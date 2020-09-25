@@ -41,7 +41,7 @@ export default ({ children }) => {
   //socket functions
   const fixWinner = (side) => {
     if (isAuthenticated) {
-      socket.emit("winner", side);
+      socket.emit("winner", { side, opponentId });
     }
     setWinner(side);
   };
@@ -67,6 +67,8 @@ export default ({ children }) => {
   socket.on("updated", () => {
     fetchLeaderboard();
   });
+
+  socket.on("winner", (side) => setWinner(side));
 
   socket.on("an error", (error) => console.log(error));
 
