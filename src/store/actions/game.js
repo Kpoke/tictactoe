@@ -56,7 +56,7 @@ export const fetchLeaderboard = () => {
   return (dispatch) => {
     dispatch(fetchLeaderboardStart());
     axios
-      .get(`/api/leaderBoard`)
+      .get(`https://playtttoe.herokuapp.com/api/leaderBoard`)
       .then((response) => {
         dispatch(setLeaderboard(response.data));
       })
