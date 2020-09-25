@@ -1,5 +1,7 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 import * as actions from "./store/actions";
 import Button from "./components/UI/Button/button";
@@ -26,13 +28,23 @@ const App = () => {
         <Auth callback={setShowAuthForm} />
       ) : (
         <div className={classes.container}>
-          <div
-            style={{ display: isAuthenticated ? "block" : "none" }}
-            className={classes.button}
-          >
-            <Button onClick={logout} size="Small" btnType="Danger">
-              Logout
-            </Button>
+          <div className={classes.button}>
+            <a
+              href="https://github.com/Kpoke/tictactoe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FontAwesomeIcon
+                icon={faGithub}
+                transform="grow-13 down-12"
+                style={{ margin: "10px" }}
+              />
+            </a>
+            {isAuthenticated ? (
+              <Button onClick={logout} size="Small" btnType="Danger">
+                Logout
+              </Button>
+            ) : null}
           </div>
           <div className={classes.gridContainer}>
             <div className={classes.section}>
