@@ -8,7 +8,7 @@ import useTimer from "../../hooks/useTimer";
 const Timer = ({ side }) => {
   const ws = useContext(WebSocketContext);
   const { toPlay, gameStarted, gameOver } = useSelector((state) => state.game);
-  const [time, start, pause, reset] = useTimer(10);
+  const [time, start, pause, reset] = useTimer(30);
 
   useEffect(() => {
     gameStarted && reset();
