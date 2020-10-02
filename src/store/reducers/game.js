@@ -15,6 +15,10 @@ const initialState = {
     c2: "",
     c3: "",
   },
+  timeObject: {
+    user: 30,
+    opponent: 30,
+  },
   onlineGame: false,
   username: "Testing t",
   opponentId: null,

@@ -5,14 +5,14 @@ import { WebSocketContext } from "../../WebSocket";
 import { otherSide } from "../../shared/utility";
 import useTimer from "../../hooks/useTimer";
 
-const Timer = ({ side }) => {
+const Timer = ({ side, seconds, setTime }) => {
   const ws = useContext(WebSocketContext);
   const { toPlay, gameStarted, gameOver } = useSelector((state) => state.game);
-  const [time, start, pause, reset] = useTimer(30);
+  const [time, start, pause, reset] = useTimer(seconds);
 
   useEffect(() => {
-    gameStarted && reset();
-  }, [gameStarted, reset]);
+    setTime(time);
+  }, [time, setTime]);
 
   useEffect(() => {
     if (time === 0 && gameStarted) {

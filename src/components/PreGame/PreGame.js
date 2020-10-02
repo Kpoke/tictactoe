@@ -24,6 +24,9 @@ const Leaderboard = ({ showPreGame }) => {
     socket.on("matched", (opponent) => {
       setMatched(true);
       setOpponent(opponent);
+      if (opponent.callback) {
+        opponent.callback();
+      }
     });
     return () => socket.off("matched");
   }, [setMatched]);

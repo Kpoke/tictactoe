@@ -1,8 +1,9 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { WebSocketContext } from "../../WebSocket";
 import { otherSide, conditionalRender } from "../../shared/utility";
+import { socket } from "../../config";
 import PreGame from "../PreGame/PreGame";
 import Timer from "../Timer/Timer";
 import Board from "../Board/Board";
@@ -14,12 +15,15 @@ const Game = ({ callback }) => {
   const ws = useContext(WebSocketContext);
   const dispatch = useDispatch();
   const [showPreGame, setShowPreGame] = useState(false);
+  const [localOpponentTime, setLocalOpponentTime] = useState(30);
+  const [localUserTime, setLocalUserTime] = useState(30);
 
   const {
     gameOver,
     onlineGame,
     winner,
     draw,
+    timeObject,
     players,
     gameStarted,
   } = useSelector((state) => state.game);
@@ -29,6 +33,18 @@ const Game = ({ callback }) => {
     (number) => dispatch(actions.setPlayers(number)),
     [dispatch]
   );
+
+  const played = useCallback(
+    (box, timeObject) => dispatch(actions.played(box, timeObject)),
+    [dispatch]
+  );
+
+  useEffect(() => {
+    console.log(timeObject);
+    socket.on("play", ({ box, timeObject }) => {
+      played(box, timeObject);
+    });
+  }, [played, timeObject]);
   return (
     <div className={classes.container}>
       {showPreGame ? (
@@ -36,7 +52,6 @@ const Game = ({ callback }) => {
           <PreGame showPreGame={setShowPreGame} />
         </div>
       ) : null}
-
       {gameOver ? (
         draw ? (
           <div>
@@ -54,22 +69,33 @@ const Game = ({ callback }) => {
           {players.length === 2
             ? `${players[1].username} is ${players[1].side}`
             : `Computer is ${otherSide(players[0].side)}`}
-          {onlineGame ? <Timer side={`${players[1].side}`} /> : null}
+          {onlineGame ? (
+            <Timer
+              side={`${players[1].side}`}
+              setTime={setLocalOpponentTime}
+              seconds={timeObject.opponent}
+            />
+          ) : null}
         </h6>
       )}
-
       <div className={classes.board}>
-        <Board />
+        <Board
+          localTimeObject={{ opponent: localOpponentTime, user: localUserTime }}
+        />
       </div>
-
       {conditionalRender(
         gameStarted,
         <h6 className={classes.miniHeaders}>
-          {onlineGame ? <Timer side={players[0].side} /> : null}
+          {onlineGame ? (
+            <Timer
+              side={players[0].side}
+              seconds={timeObject.user}
+              setTime={setLocalUserTime}
+            />
+          ) : null}
           {players[0].username}, you're {players[0].side}
         </h6>
       )}
-
       {conditionalRender(
         !gameStarted,
         <div className={classes.buttons}>

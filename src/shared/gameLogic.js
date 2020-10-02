@@ -99,5 +99,5 @@ export const played = (state, action) => {
     state.toPlay,
     false
   );
-  return { ...state, ...result };
+  return { ...state, ...result, timeObject: action.timeObject };
 };

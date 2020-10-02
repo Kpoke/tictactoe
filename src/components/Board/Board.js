@@ -6,7 +6,7 @@ import * as actions from "../../store/actions";
 import Box from "../Box/Box";
 import classes from "./Board.module.css";
 
-const Board = () => {
+const Board = ({ localTimeObject }) => {
   const ws = useContext(WebSocketContext);
   const dispatch = useDispatch();
   const { boxes, onlineGame, gameStarted } = useSelector((state) => state.game);
@@ -15,7 +15,7 @@ const Board = () => {
   ]);
 
   const clickHandler = (location) =>
-    onlineGame ? ws.play(location) : played(location);
+    onlineGame ? ws.play(location, localTimeObject) : played(location);
   return (
     <div className={classes.board}>
       <div className={classes.row}>

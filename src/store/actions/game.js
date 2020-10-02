@@ -1,11 +1,11 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
 
-export const played = (box, side) => {
+export const played = (box, timeObject) => {
   return {
     type: actionTypes.PLAYED,
     box,
-    side,
+    timeObject,
   };
 };
 
@@ -56,7 +56,7 @@ export const fetchLeaderboard = () => {
   return (dispatch) => {
     dispatch(fetchLeaderboardStart());
     axios
-      .get(`https://playtttoe.herokuapp.com/api/leaderBoard`)
+      .get(`http://localhost:3001/api/leaderBoard`)
       .then((response) => {
         dispatch(setLeaderboard(response.data));
       })

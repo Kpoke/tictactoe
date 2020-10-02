@@ -22,9 +22,10 @@ export default ({ children }) => {
   const isAuthenticated = useSelector((state) => state.auth.token !== null);
   const { user, token } = useSelector((state) => state.auth);
 
-  const played = useCallback((box) => dispatch(actions.played(box)), [
-    dispatch,
-  ]);
+  const played = useCallback(
+    (box, timeObject) => dispatch(actions.played(box, timeObject)),
+    [dispatch]
+  );
 
   const setWinner = useCallback((side) => dispatch(actions.setWinner(side)), [
     dispatch,
@@ -55,14 +56,12 @@ export default ({ children }) => {
     }
   };
 
-  const play = (box) => {
+  const play = (box, localTimeObject) => {
     if (toPlay === players[0].side) {
       socket.emit("play", { box, opponentId });
-      played(box);
+      played(box, localTimeObject);
     }
   };
-
-  socket.on("play", (box) => played(box));
 
   socket.on("updated", () => {
     fetchLeaderboard();

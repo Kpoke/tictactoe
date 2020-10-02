@@ -35,8 +35,8 @@ export const auth = (authData, isSignup) => {
   return (dispatch) => {
     dispatch(authStart());
     let url = isSignup
-      ? "https://playtttoe.herokuapp.com/api/signup"
-      : "https://playtttoe.herokuapp.com/api/login";
+      ? "http://localhost:3001/api/signup"
+      : "http://localhost:3001/api/login";
 
     axios
       .post(url, authData)
