@@ -40,7 +40,6 @@ const Game = ({ callback }) => {
   );
 
   useEffect(() => {
-    console.log(timeObject);
     socket.on("play", ({ box, timeObject }) => {
       played(box, timeObject);
     });
