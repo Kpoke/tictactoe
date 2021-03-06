@@ -56,6 +56,10 @@ export default ({ children }) => {
     }
   };
 
+  const cancelWaiting = () => {
+    socket.emit("cancel");
+  };
+
   const play = (box, localTimeObject) => {
     if (toPlay === players[0].side) {
       socket.emit("play", { box, opponentId });
@@ -75,6 +79,7 @@ export default ({ children }) => {
     play,
     setPlayers,
     fixWinner,
+    cancelWaiting,
   };
 
   return (

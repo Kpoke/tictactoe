@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import useTimer from "../../hooks/useTimer";
@@ -7,8 +7,10 @@ import * as actions from "../../store/actions";
 import Button from "../UI/Button/button";
 import Loading from "../UI/Spinner/LoadingIndicator";
 import classes from "./PreGame.module.css";
+import { WebSocketContext } from "../../WebSocket";
 
-const Leaderboard = ({ showPreGame }) => {
+const PreGame = ({ showPreGame }) => {
+  const ws = useContext(WebSocketContext);
   const [time, start] = useTimer(4);
   const [matched, setMatched] = useState(false);
   const [opponent, setOpponent] = useState(null);
@@ -52,7 +54,10 @@ const Leaderboard = ({ showPreGame }) => {
           <Button
             btnType="Success"
             size="Small"
-            onClick={() => showPreGame(false)}
+            onClick={() => {
+              ws.cancelWaiting();
+              showPreGame(false);
+            }}
           >
             cancel
           </Button>
@@ -64,4 +69,4 @@ const Leaderboard = ({ showPreGame }) => {
   return <div className={classes.container}>{toShow}</div>;
 };
 
-export default Leaderboard;
+export default PreGame;
