@@ -18,7 +18,7 @@
     <br />
     <a href="https://kpoke.github.io/tictactoe/">View</a>
     ·
-    <a href=https://github.com/Kpoke/tic-tac-toe-backend>Backend</a>
+    <a href="https://github.com/Kpoke/tic-tac-toe-backend">Backend</a>
     ·
     <a href="https://github.com/Kpoke/tictactoe/issues">Report Bug</a>
     ·
@@ -105,6 +105,8 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Kpoke - [@Danielholodja](twitter.com/Danielholodja)
 
 Project Link: [https://github.com/Kpoke/tictactoe](https://github.com/Kpoke/tictactoe)
+
+Project Backend Link: [https://github.com/Kpoke/tic-tac-toe-backend](https://github.com/Kpoke/tic-tac-toe-backend)
 
 
 
