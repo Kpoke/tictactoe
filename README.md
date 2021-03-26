@@ -18,6 +18,8 @@
     <br />
     <a href="https://kpoke.github.io/tictactoe/">View</a>
     ·
+    <a href=https://github.com/Kpoke/tic-tac-toe-backend>Backend</a>
+    ·
     <a href="https://github.com/Kpoke/tictactoe/issues">Report Bug</a>
     ·
     <a href="https://github.com/Kpoke/tictactoe/issues">Request Feature</a>
