@@ -1,6 +1,20 @@
 .box {
   height: 100px;
   width: 100px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.box:hover:not([aria-disabled="true"]) {
+  background-color: var(--box-hover);
+  transform: scale(1.02);
+}
+
+.box[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .text {
@@ -8,12 +22,38 @@
   font-size: 70px;
   font-weight: 700;
   margin: 5px auto;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
+}
+
+/* Color coding for X and O using data attributes */
+.text[data-player="X"] {
+  color: var(--player-x);
+}
+
+.text[data-player="O"] {
+  color: var(--player-o);
 }
 
 .bottom {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .right {
-  border-right: 2px solid black;
+  border-right: 2px solid var(--border-color);
+}
+
+.winning {
+  background-color: rgba(13, 110, 253, 0.1) !important;
+  animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }

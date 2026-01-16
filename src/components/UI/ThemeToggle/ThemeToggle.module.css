@@ -1,0 +1,25 @@
+.themeToggle {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  box-sizing: border-box;
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--text-color) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.themeToggle svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.themeToggle:hover {
+  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

@@ -1,0 +1,94 @@
+.errorBoundary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
+}
+
+.errorContent {
+  max-width: 600px;
+  width: 100%;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 2px 10px var(--shadow);
+  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.errorTitle {
+  color: #d32f2f;
+  font-size: 2rem;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.errorMessage {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+  transition: color 0.3s ease;
+}
+
+.errorDetails {
+  margin: 24px 0;
+  text-align: left;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 16px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  transition: color 0.3s ease;
+}
+
+.errorDetails summary:hover {
+  color: #d32f2f;
+}
+
+.errorStack {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  color: #d32f2f;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.errorActions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+@media (max-width: 600px) {
+  .errorContent {
+    padding: 24px;
+  }
+
+  .errorTitle {
+    font-size: 1.5rem;
+  }
+
+  .errorActions {
+    flex-direction: column;
+  }
+}
