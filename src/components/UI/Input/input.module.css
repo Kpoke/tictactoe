@@ -12,21 +12,29 @@
 
 .InputElement {
   outline: none;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   font: inherit;
   padding: 6px 10px;
   display: block;
   width: 100%;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .InputElement:focus {
   outline: none;
-  background-color: #ccc;
+  background-color: var(--bg-secondary);
+  border-color: var(--text-secondary);
 }
 
 .Invalid {
-  border: 1px solid red;
-  background-color: #fda49a;
+  border: 1px solid #d32f2f;
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+.Label {
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }

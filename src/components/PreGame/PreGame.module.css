@@ -1,5 +1,8 @@
 .container {
-  background-color: #ccc;
-  padding: 10px;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 20px;
   text-align: center;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

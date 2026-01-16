@@ -1,13 +1,18 @@
 .Auth {
   text-align: center;
-  box-shadow: 0 2px 3px #ccc;
-  border: 1px solid #eee;
+  box-shadow: 0 4px 6px var(--shadow), 0 1px 3px var(--shadow);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   box-sizing: border-box;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
+  border-radius: 12px;
+  padding: 24px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 @media (min-width: 600px) {

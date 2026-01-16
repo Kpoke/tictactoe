@@ -1,6 +1,26 @@
 .header {
-  color: rgb(30, 56, 25);
+  color: var(--text-primary);
   text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 0 0 20px 0;
+  padding: 0;
+  line-height: 1.2;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--accent-primary), transparent);
+  border-radius: 2px;
 }
 
 .list {
@@ -9,21 +29,43 @@
   height: 300px;
   width: 70%;
   overflow: auto;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 4px var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .username {
   float: left;
   font-weight: 700;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .points {
   text-align: right;
   font-weight: 700;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .item {
-  padding: 10px;
-  border-bottom: 1px solid black;
-  box-shadow: 0 2px 2px rgb(48, 148, 61);
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 2px var(--shadow);
   box-sizing: border-box;
+  background-color: var(--bg-primary);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.item:hover {
+  background-color: var(--bg-tertiary);
+  transform: translateX(2px);
+}
+
+.item:last-child {
+  border-bottom: none;
 }

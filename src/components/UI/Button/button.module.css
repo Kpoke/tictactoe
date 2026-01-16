@@ -1,35 +1,105 @@
 .Button {
-  display: block border 0;
-  margin: 1em auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  margin: 0;
   padding: 0.75em 1em;
   font-size: 1em;
   color: #fff;
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
   text-transform: uppercase;
   font-family: "$sans";
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 6px;
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  transition: all 0.2s ease;
+  vertical-align: middle;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.Button:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--shadow-hover);
 }
 
 .Small {
   width: fit-content;
-  height: 30px;
-  margin: auto;
-  padding: 5px;
-  font-size: small;
+  min-height: 32px;
+  height: auto;
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 14px;
   text-transform: capitalize;
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Enhanced text shadow for small buttons with primary/success/danger colors */
+.Small.Primary,
+.Small.Success,
+.Small.Danger {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
 }
 
 .Button:disabled {
-  color: #ccc;
+  color: var(--text-secondary);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .Success {
-  color: #5c9210;
+  background-color: var(--accent-success);
+  color: #fff;
+  border-color: var(--accent-success);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.Success:hover:not(:disabled) {
+  background-color: var(--accent-success-hover);
+  border-color: var(--accent-success-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--shadow-hover);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.Primary {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  border-color: var(--accent-primary);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+}
+
+.Primary:hover:not(:disabled) {
+  background-color: var(--accent-primary-hover);
+  border-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--shadow-hover);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.4);
 }
 
 .Danger {
-  background-color: #c34d41;
+  background-color: var(--accent-danger);
+  color: #fff;
+  border-color: var(--accent-danger);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.Danger:hover:not(:disabled) {
+  background-color: var(--accent-danger-hover);
+  border-color: var(--accent-danger-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px var(--shadow-hover);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
 }

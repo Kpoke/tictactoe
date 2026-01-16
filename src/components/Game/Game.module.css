@@ -1,8 +1,9 @@
 .miniHeaders {
-  color: rgb(30, 56, 25);
+  color: var(--text-primary);
   font-weight: 700;
   font-size: 15px;
   text-align: center;
+  transition: color 0.3s ease;
 }
 
 .board {
@@ -11,12 +12,17 @@
 }
 
 .preGame {
-  border: 1px solid black;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .buttons {

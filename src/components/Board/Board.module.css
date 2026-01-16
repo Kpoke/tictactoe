@@ -1,11 +1,165 @@
 .board {
-  border: 1px solid black;
-  box-shadow: 2px 2px 3px rgb(48, 148, 61);
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 6px var(--shadow);
   box-sizing: border-box;
   margin: 20px;
   width: fit-content;
+  background-color: var(--board-bg);
+  border-radius: 12px;
+  padding: 12px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .row {
   display: flex;
+  position: relative;
+}
+
+.board {
+  position: relative;
+}
+
+.winningLine {
+  position: absolute;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--accent-primary),
+    transparent
+  );
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 0 10px var(--accent-primary);
+}
+
+/* Animation for horizontal and vertical lines */
+.winRow1,
+.winRow2,
+.winRow3,
+.winCol1,
+.winCol2,
+.winCol3 {
+  animation: drawLineHorizontal 0.5s ease-out;
+}
+
+/* Animation for diagonal lines */
+.winDiag1,
+.winDiag2 {
+  animation: drawLineDiagonal 0.5s ease-out;
+}
+
+@keyframes drawLineHorizontal {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drawLineDiagonal1 {
+  from {
+    opacity: 0;
+    transform: rotate(45deg) scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(45deg) scaleX(1);
+  }
+}
+
+@keyframes drawLineDiagonal2 {
+  from {
+    opacity: 0;
+    transform: rotate(-45deg) scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-45deg) scaleX(1);
+  }
+}
+
+.winDiag1 {
+  animation: drawLineDiagonal1 0.5s ease-out;
+  transform: rotate(45deg);
+}
+
+.winDiag2 {
+  animation: drawLineDiagonal2 0.5s ease-out;
+  transform: rotate(-45deg);
+}
+
+/* Horizontal lines - centered on box centers */
+/* Boxes are 100px each, board has 12px padding, so centers are at: 12+50=62px, 112+50=162px, 212+50=262px */
+.winRow1 {
+  top: 62px; /* 12px padding + 50px to center of first row */
+  left: 12px;
+  width: 300px; /* Full width of 3 boxes */
+  height: 4px;
+  transform-origin: left center;
+}
+
+.winRow2 {
+  top: 162px; /* 12px padding + 100px (first box) + 50px to center of second row */
+  left: 12px;
+  width: 300px;
+  height: 4px;
+  transform-origin: left center;
+}
+
+.winRow3 {
+  top: 262px; /* 12px padding + 200px (first two boxes) + 50px to center of third row */
+  left: 12px;
+  width: 300px;
+  height: 4px;
+  transform-origin: left center;
+}
+
+/* Vertical lines - centered on box centers */
+.winCol1 {
+  top: 12px;
+  left: 62px; /* 12px padding + 50px to center of first column */
+  width: 4px;
+  height: 300px; /* Full height of 3 boxes */
+  transform-origin: center top;
+}
+
+.winCol2 {
+  top: 12px;
+  left: 162px; /* 12px padding + 100px (first box) + 50px to center of second column */
+  width: 4px;
+  height: 300px;
+  transform-origin: center top;
+}
+
+.winCol3 {
+  top: 12px;
+  left: 262px; /* 12px padding + 200px (first two boxes) + 50px to center of third column */
+  width: 4px;
+  height: 300px;
+  transform-origin: center top;
+}
+
+/* Diagonal lines - need to cover full diagonal from corner to corner */
+.winDiag1 {
+  /* Diagonal from a1 (top-left) to c3 (bottom-right) */
+  /* Box centers: a1 at (62px, 62px), c3 at (262px, 262px) */
+  top: 62px; /* Center of first row */
+  left: 62px; /* Center of first column */
+  width: 283px; /* sqrt((262-62)^2 + (262-62)^2) = sqrt(200^2 + 200^2) ≈ 283px */
+  height: 4px;
+  transform-origin: left center;
+}
+
+.winDiag2 {
+  /* Diagonal from a3 (top-right) to c1 (bottom-left) */
+  /* Box centers: a3 at (262px, 62px), c1 at (62px, 262px) */
+  top: 62px; /* Center of first row */
+  right: 62px; /* Center of last column (from right edge) */
+  width: 283px;
+  height: 4px;
+  transform-origin: right center;
 }
