@@ -224,10 +224,10 @@ const playingAsX = (boxes: Boxes, freeBoxes: BoxKey[]): BoxKey => {
 };
 
 /**
- * Improved AI with better strategic play
- * Priority: Win > Block > Fork > Block Fork > Center > Corner > Edge
+ * Improved AI with minimax algorithm for optimal play
+ * Falls back to strategic play if minimax fails
  */
-export const computerPlay = (toPlay: "X" | "O", boxes: Boxes): Boxes => {
+export const computerPlay = (toPlay: "X" | "O", boxes: Boxes, boardSize: number = 3, winCondition: number = 3): Boxes => {
   const play = (box: BoxKey): Boxes => {
     const newBoxes = { ...boxes };
     newBoxes[box] = toPlay;
@@ -237,55 +237,198 @@ export const computerPlay = (toPlay: "X" | "O", boxes: Boxes): Boxes => {
   const freeBoxes = checkAvailable(boxes);
   if (freeBoxes.length === 1) return play(freeBoxes[0]);
 
-  // 1. Win if possible
-  const toWinBox = winningBoxes(boxes, toPlay, false);
-  if (toWinBox) return play(toWinBox);
-
-  // 2. Block opponent from winning
-  const preventLossBox = winningBoxes(boxes, toPlay, true);
-  if (preventLossBox) return play(preventLossBox);
-
-  // 3. Create a fork (two winning opportunities)
-  const forkBox = findForkMove(boxes, toPlay);
-  if (forkBox) return play(forkBox);
-
-  // 4. Block opponent's fork
-  const blockForkBox = blockOpponentFork(boxes, toPlay);
-  if (blockForkBox) return play(blockForkBox);
-
-  // 5. Take center if available
-  if (boxes.b2 === "") return play("b2");
-
-  // 6. Take opposite corner if opponent is in corner
-  const oppositeCorners: [BoxKey, BoxKey][] = [
-    ["a1", "c3"],
-    ["a3", "c1"],
-    ["c1", "a3"],
-    ["c3", "a1"],
-  ];
-  const otherSide = opponentSide(toPlay);
-  for (const [corner1, corner2] of oppositeCorners) {
-    if (boxes[corner1] === otherSide && boxes[corner2] === "" && freeBoxes.includes(corner2)) {
-      return play(corner2);
+  // Use minimax for optimal play (works best for 3x3, but also for 4x4 and 5x5)
+  try {
+    const { getBestMove } = require("./minimax");
+    const bestMove = getBestMove(boxes, boardSize, winCondition, toPlay);
+    if (bestMove && freeBoxes.includes(bestMove)) {
+      return play(bestMove);
     }
+  } catch (error) {
+    // Fall through to strategic play if minimax fails
   }
 
-  // 7. Take any available corner
-  const availableCorners = cornerBoxes.filter(box => freeBoxes.includes(box));
-  if (availableCorners.length > 0) {
-    return play(availableCorners[randomIndex(availableCorners.length)]);
-  }
+  // Strategic play fallback (for 3x3 or when minimax unavailable)
+  if (boardSize === 3) {
+    // 1. Win if possible
+    const toWinBox = winningBoxes(boxes, toPlay, false);
+    if (toWinBox) return play(toWinBox);
 
-  // 8. Fallback to existing strategy for X
-  if (toPlay === "X") return play(playingAsX(boxes, freeBoxes));
+    // 2. Block opponent from winning
+    const preventLossBox = winningBoxes(boxes, toPlay, true);
+    if (preventLossBox) return play(preventLossBox);
 
-  // 9. Fallback to existing strategy for O
-  if (freeBoxes.length === FIRST_MOVE_O) return play(openingO(boxes));
-  if (freeBoxes.length === SECOND_MOVE_O) {
-    const keyBox = checkKeyBoxes(boxes, toPlay);
-    if (keyBox) return play(keyBox);
+    // 3. Create a fork (two winning opportunities)
+    const forkBox = findForkMove(boxes, toPlay);
+    if (forkBox) return play(forkBox);
+
+    // 4. Block opponent's fork
+    const blockForkBox = blockOpponentFork(boxes, toPlay);
+    if (blockForkBox) return play(blockForkBox);
+
+    // 5. Take center if available
+    if (boxes.b2 === "") return play("b2");
+
+    // 6. Take opposite corner if opponent is in corner
+    const oppositeCorners: [BoxKey, BoxKey][] = [
+      ["a1", "c3"],
+      ["a3", "c1"],
+      ["c1", "a3"],
+      ["c3", "a1"],
+    ];
+    const otherSide = opponentSide(toPlay);
+    for (const [corner1, corner2] of oppositeCorners) {
+      if (boxes[corner1] === otherSide && boxes[corner2] === "" && freeBoxes.includes(corner2)) {
+        return play(corner2);
+      }
+    }
+
+    // 7. Take any available corner
+    const availableCorners = cornerBoxes.filter(box => freeBoxes.includes(box));
+    if (availableCorners.length > 0) {
+      return play(availableCorners[randomIndex(availableCorners.length)]);
+    }
+
+    // 8. Fallback to existing strategy for X
+    if (toPlay === "X") return play(playingAsX(boxes, freeBoxes));
+
+    // 9. Fallback to existing strategy for O
+    if (freeBoxes.length === FIRST_MOVE_O) return play(openingO(boxes));
+    if (freeBoxes.length === SECOND_MOVE_O) {
+      const keyBox = checkKeyBoxes(boxes, toPlay);
+      if (keyBox) return play(keyBox);
+    }
+  } else {
+    // For 4x4 and 5x5, use improved strategic play
+    // Try to use minimax if available
+    try {
+      const { getBestMove } = require("./minimax");
+      const bestMove = getBestMove(boxes, boardSize, winCondition, toPlay);
+      if (bestMove && freeBoxes.includes(bestMove)) {
+        return play(bestMove);
+      }
+    } catch (error) {
+      // Fall through to basic strategic play
+    }
+
+    // Basic strategic play for larger boards (fallback if minimax unavailable)
+    // 1. Win if possible
+    const winMove = findWinningMove(boxes, boardSize, winCondition, toPlay);
+    if (winMove) return play(winMove);
+
+    // 2. Block opponent from winning
+    const blockMove = findWinningMove(boxes, boardSize, winCondition, opponentSide(toPlay));
+    if (blockMove) return play(blockMove);
+
+    // 3. Take center area
+    const centerMoves = getCenterMoves(boxes, boardSize, freeBoxes);
+    if (centerMoves.length > 0) {
+      return play(centerMoves[randomIndex(centerMoves.length)]);
+    }
   }
 
   // 10. Random move as last resort
   return play(freeBoxes[randomIndex(freeBoxes.length)]);
+};
+
+/**
+ * Find winning move for larger boards
+ */
+const findWinningMove = (boxes: Boxes, boardSize: number, winCondition: number, side: "X" | "O"): BoxKey | null => {
+  const freeBoxes = checkAvailable(boxes);
+  
+  for (const move of freeBoxes) {
+    const testBoxes = { ...boxes };
+    testBoxes[move] = side;
+    if (checkWinForMove(testBoxes, boardSize, winCondition, side, move)) {
+      return move;
+    }
+  }
+  
+  return null;
+};
+
+/**
+ * Check if a move creates a win
+ */
+const checkWinForMove = (boxes: Boxes, boardSize: number, winCondition: number, side: "X" | "O", move: BoxKey): boolean => {
+  // Parse move coordinates
+  const row = move.charCodeAt(0) - 97; // a=0, b=1, etc.
+  const col = parseInt(move.substring(1)) - 1;
+  
+  // Check all directions from this move
+  const directions = [
+    [0, 1],   // horizontal
+    [1, 0],   // vertical
+    [1, 1],   // diagonal \
+    [1, -1],  // diagonal /
+  ];
+  
+  for (const [dr, dc] of directions) {
+    let count = 1; // Count the current move
+    
+    // Check forward direction
+    for (let i = 1; i < winCondition; i++) {
+      const newRow = row + dr * i;
+      const newCol = col + dc * i;
+      if (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize) {
+        const key = getBoxKeyFromCoords(newRow, newCol);
+        if (boxes[key as BoxKey] === side) {
+          count++;
+        } else {
+          break;
+        }
+      } else {
+        break;
+      }
+    }
+    
+    // Check backward direction
+    for (let i = 1; i < winCondition; i++) {
+      const newRow = row - dr * i;
+      const newCol = col - dc * i;
+      if (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize) {
+        const key = getBoxKeyFromCoords(newRow, newCol);
+        if (boxes[key as BoxKey] === side) {
+          count++;
+        } else {
+          break;
+        }
+      } else {
+        break;
+      }
+    }
+    
+    if (count >= winCondition) return true;
+  }
+  
+  return false;
+};
+
+/**
+ * Get center moves for larger boards
+ */
+const getCenterMoves = (boxes: Boxes, boardSize: number, freeBoxes: BoxKey[]): BoxKey[] => {
+  const centerStart = Math.floor(boardSize / 2) - 1;
+  const centerEnd = Math.ceil(boardSize / 2);
+  const centerMoves: BoxKey[] = [];
+  
+  for (let row = centerStart; row <= centerEnd; row++) {
+    for (let col = centerStart; col <= centerEnd; col++) {
+      const key = getBoxKeyFromCoords(row, col);
+      if (freeBoxes.includes(key as BoxKey)) {
+        centerMoves.push(key as BoxKey);
+      }
+    }
+  }
+  
+  return centerMoves;
+};
+
+/**
+ * Get box key from coordinates
+ */
+const getBoxKeyFromCoords = (row: number, col: number): string => {
+  const letters = "abcdefghijklmnopqrstuvwxyz";
+  return `${letters[row]}${col + 1}`;
 };

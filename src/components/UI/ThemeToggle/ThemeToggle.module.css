@@ -1,25 +1,57 @@
 .themeToggle {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 30px !important;
-  height: 30px !important;
-  min-width: 30px !important;
-  min-height: 30px !important;
+  margin: 0;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
   box-sizing: border-box;
-  background-color: transparent !important;
-  border: none !important;
-  color: var(--text-color) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  line-height: 0;
+  flex-shrink: 0;
+  font-family: inherit;
+  outline: none;
 }
 
 .themeToggle svg {
-  width: 20px !important;
-  height: 20px !important;
+  width: 18px;
+  height: 18px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  color: inherit;
 }
 
 .themeToggle:hover {
-  opacity: 0.8;
-  background-color: rgba(0, 0, 0, 0.1) !important;
+  background-color: var(--bg-tertiary) !important;
+  border-color: var(--accent-primary) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px var(--shadow);
+}
+
+.themeToggle:active {
+  transform: translateY(0);
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  .themeToggle {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+  }
+
+  .themeToggle svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
 }

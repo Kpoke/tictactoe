@@ -4,7 +4,7 @@
  */
 
 import { useEffect } from "react";
-import { socket } from "../config";
+import { getSocket } from "../config";
 import logger from "../utils/logger";
 import type { BoxKey, TimeObject } from "../types";
 
@@ -25,6 +25,13 @@ export const useSocketHandlers = (handlers: UseSocketHandlersProps): void => {
 
   // Register socket listeners
   useEffect(() => {
+    const socket = getSocket();
+    
+    // If socket is not available (feature disabled), skip registration
+    if (!socket) {
+      return;
+    }
+
     if (onUpdated) {
       socket.on("updated", onUpdated);
     }

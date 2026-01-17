@@ -1,8 +1,336 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .container {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 380px;
   background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  padding: 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  z-index: 10000;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.header {
+  background: var(--bg-primary);
+  border-bottom: 2px solid var(--border-color);
+  padding: 24px 24px 20px;
   text-align: center;
-  border-radius: 8px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--player-x) 0%, var(--player-o) 100%);
+}
+
+.headerTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.headerSubtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 400;
+}
+
+.content {
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.searchingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.spinnerWrapper {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.searchingText {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  position: relative;
+}
+
+.searchingText::after {
+  content: "...";
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%, 100% {
+    content: "...";
+  }
+}
+
+.searchingSubtext {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 4px 0 0 0;
+  font-weight: 400;
+}
+
+.matchedContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  animation: matchFound 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes matchFound {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.opponentCard {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px 24px;
+  width: 100%;
+  box-shadow: 0 4px 12px var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.opponentCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--player-x) 0%, var(--player-o) 100%);
+}
+
+.opponentFound {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.opponentName {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.opponentSide {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.opponentSideX {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: var(--player-x);
+}
+
+.opponentSideO {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: var(--player-o);
+}
+
+.countdownContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.countdownLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.countdownNumber {
+  font-size: 56px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--player-x) 0%, var(--player-o) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  animation: countdownPulse 1s ease-in-out infinite;
+  position: relative;
+}
+
+@keyframes countdownPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.cancelButton {
+  margin-top: 4px;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  text-transform: none !important;
+  letter-spacing: 0.3px;
+  border: 2px solid var(--border-color) !important;
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  border-color: var(--accent-danger) !important;
+  color: var(--accent-danger) !important;
+  background: rgba(220, 53, 69, 0.05) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+}
+
+.cancelButton:active {
+  transform: translateY(0);
+}
+
+.cancelButton span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  .container {
+    width: 95%;
+    max-width: none;
+    border-radius: 12px;
+  }
+
+  .header {
+    padding: 20px 20px 16px;
+  }
+
+  .headerTitle {
+    font-size: 20px;
+  }
+
+  .content {
+    padding: 28px 20px;
+  }
+
+  .countdownNumber {
+    font-size: 48px;
+  }
+
+  .spinnerWrapper {
+    width: 64px;
+    height: 64px;
+  }
+
+  .opponentCard {
+    padding: 18px 20px;
+  }
+
+  .opponentName {
+    font-size: 20px;
+  }
 }

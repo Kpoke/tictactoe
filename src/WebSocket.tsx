@@ -1,10 +1,11 @@
 import React, { createContext, useCallback, useEffect, useMemo } from "react";
 import * as actions from "./store/actions/index";
-import { socket } from "./config";
+import { getSocket } from "./config";
 import type { BoxKey, TimeObject, User } from "./types";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { useSocketHandlers } from "./hooks/useSocketHandlers";
 import logger from "./utils/logger";
+import { isOnlineMultiplayerEnabled, isLeaderboardEnabled, isUserPointsEnabled } from "./utils/featureFlags";
 
 interface WebSocketContextType {
   play: (box: BoxKey, localTimeObject: TimeObject) => void;
@@ -23,6 +24,7 @@ interface WebSocketProviderProps {
 
 const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
   const dispatch = useAppDispatch();
+  const socket = getSocket();
 
   const { toPlay, players, opponentId, winner, onlineGame } = useAppSelector(
     (state) => state.game
@@ -46,55 +48,61 @@ const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
 
   // Update user points when winner is determined
   useEffect(() => {
-    if (winner && user && onlineGame && token) {
+    if (socket && isUserPointsEnabled() && winner && user && onlineGame && token) {
       if (winner.username === user.username) {
         socket.emit("updateuserpoints", token);
         logger.debug("User points updated after win");
       }
     }
-  }, [token, user, winner, onlineGame]);
+  }, [socket, token, user, winner, onlineGame]);
 
-  // Register socket listeners using custom hook
+  // Register socket listeners using custom hook (only if online multiplayer is enabled)
   useSocketHandlers({
-    onUpdated: fetchLeaderboard,
+    onUpdated: isLeaderboardEnabled() ? fetchLeaderboard : () => {},
     onWinner: setWinner,
   });
 
   //socket functions - wrapped in useCallback to prevent unnecessary re-renders
   const fixWinner = useCallback(
     (side: "X" | "O") => {
-      if (isAuthenticated && opponentId) {
+      if (socket && isAuthenticated && opponentId) {
         socket.emit("winner", { side, opponentId });
       }
       setWinner(side);
     },
-    [isAuthenticated, opponentId, setWinner]
+    [socket, isAuthenticated, opponentId, setWinner]
   );
 
   const setPlayers = useCallback(
     (user: User, showAuthForm: (show: boolean) => void, showLoading: (show: boolean) => void) => {
-      if (isAuthenticated) {
+      if (!socket || !isOnlineMultiplayerEnabled()) {
+        showAuthForm(true);
+        return;
+      }
+      if (isAuthenticated && user && user.username) {
         showLoading(true);
         socket.emit("setPlayers", user.username);
       } else {
         showAuthForm(true);
       }
     },
-    [isAuthenticated]
+    [socket, isAuthenticated]
   );
 
   const cancelWaiting = useCallback(() => {
-    socket.emit("cancel");
-  }, []);
+    if (socket) {
+      socket.emit("cancel");
+    }
+  }, [socket]);
 
   const play = useCallback(
     (box: BoxKey, localTimeObject: TimeObject) => {
-      if (toPlay === players[0]?.side && opponentId) {
+      if (socket && toPlay === players[0]?.side && opponentId) {
         socket.emit("play", { box, opponentId });
         played(box, localTimeObject);
       }
     },
-    [toPlay, players, opponentId, played]
+    [socket, toPlay, players, opponentId, played]
   );
 
   // Memoize WebSocket context value to prevent unnecessary re-renders

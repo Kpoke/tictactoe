@@ -1,22 +1,331 @@
 .Auth {
-  text-align: center;
-  box-shadow: 0 4px 6px var(--shadow), 0 1px 3px var(--shadow);
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  border-radius: 12px;
-  padding: 24px;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 90%;
+  max-width: 420px;
+  background-color: var(--bg-primary);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px var(--border-color);
+  padding: 0;
+  z-index: 1000;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease-out;
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.header {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+  padding: 32px 32px 24px;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.headerTitle {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.headerSubtitle {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+  font-weight: 400;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.content {
+  padding: 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.errorMessage {
+  background-color: rgba(220, 53, 69, 0.1);
+  border: 1px solid var(--accent-danger);
+  color: var(--accent-danger);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-align: left;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.submitButton {
+  margin-top: 8px;
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  text-transform: none !important;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  border: none !important;
+  background: linear-gradient(135deg, var(--accent-success) 0%, var(--accent-success-hover) 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 16px rgba(25, 135, 84, 0.4);
+  cursor: pointer;
+}
+
+.submitButton::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.submitButton:hover:not(:disabled)::before {
+  width: 400px;
+  height: 400px;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(25, 135, 84, 0.5);
+  background: linear-gradient(135deg, var(--accent-success-hover) 0%, var(--accent-success) 100%) !important;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.4);
+}
+
+.submitButton:focus:not(:disabled) {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2), 0 8px 24px rgba(25, 135, 84, 0.5);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  background: var(--bg-tertiary) !important;
+  color: var(--text-secondary) !important;
+}
+
+.submitButton span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .submitButton {
+  box-shadow: 0 4px 16px rgba(81, 207, 102, 0.4);
+}
+
+[data-theme="dark"] .submitButton:hover:not(:disabled) {
+  box-shadow: 0 8px 24px rgba(81, 207, 102, 0.5);
+}
+
+.switchContainer {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.switchText {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.switchButton {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.switchButton::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.switchButton:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.switchButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4);
+}
+
+.switchButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
+}
+
+.switchButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.2), 0 6px 20px rgba(30, 58, 138, 0.4);
+}
+
+.switchButton span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .switchButton {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-hover) 100%);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+[data-theme="dark"] .switchButton:hover {
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.loadingContainer {
+  padding: 60px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loadingText {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Tablet and up */
 @media (min-width: 600px) {
   .Auth {
-    width: 40%;
+    max-width: 450px;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  .Auth {
+    width: 95%;
+    max-width: none;
+    border-radius: 16px;
+  }
+
+  .header {
+    padding: 24px 24px 20px;
+  }
+
+  .headerTitle {
+    font-size: 24px;
+  }
+
+  .content {
+    padding: 24px;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
   }
 }

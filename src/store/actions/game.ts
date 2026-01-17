@@ -5,6 +5,7 @@ import type { ThunkDispatch } from "redux-thunk";
 import type { RootState } from "../../types";
 import logger from "../../utils/logger";
 import { getEnvConfigWithFallback } from "../../utils/env";
+import { isLeaderboardEnabled } from "../../utils/featureFlags";
 
 export const played = (box: BoxKey, timeObject?: TimeObject): { type: "PLAYED"; box: BoxKey; timeObject?: TimeObject } => {
   return {
@@ -14,10 +15,19 @@ export const played = (box: BoxKey, timeObject?: TimeObject): { type: "PLAYED"; 
   };
 };
 
-export const setPlayers = (number: number): { type: "SET_PLAYERS"; number: number } => {
+export const setPlayers = (number: number, boardSize: number = 3): { type: "SET_PLAYERS"; number: number; boardSize: number } => {
   return {
     type: actionTypes.SET_PLAYERS,
     number,
+    boardSize,
+  };
+};
+
+export const setBoardSize = (boardSize: number, winCondition: number): { type: "SET_BOARD_SIZE"; boardSize: number; winCondition: number } => {
+  return {
+    type: actionTypes.SET_BOARD_SIZE,
+    boardSize,
+    winCondition,
   };
 };
 
@@ -66,6 +76,11 @@ const setLeaderboard = (leaders: Leader[]): { type: "SET_LEADERBOARD"; leaders: 
  */
 export const fetchLeaderboard = () => {
   return (dispatch: ThunkDispatch<RootState, unknown, GameAction>) => {
+    if (!isLeaderboardEnabled()) {
+      logger.debug("Leaderboard is disabled. Skipping fetch.");
+      return;
+    }
+    
     dispatch(fetchLeaderboardStart());
     const { API_BASE_URL } = getEnvConfigWithFallback();
     axios

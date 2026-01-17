@@ -8,6 +8,7 @@ interface ButtonProps {
   size?: string;
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
   children: React.ReactNode;
   "aria-label"?: string;
   title?: string;
@@ -33,7 +34,7 @@ const Button: React.FC<ButtonProps> = (props) => (
     aria-disabled={props.disabled}
     aria-label={props["aria-label"]}
     title={props.title}
-    type="button"
+    type={props.type || "button"}
   >
     {props.children}
   </button>

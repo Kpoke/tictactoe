@@ -3,7 +3,8 @@ import { played as playedLogic, findWinner, checkBoxes } from "../../shared/game
 import { computerPlay } from "../../shared/GameEngine/computer";
 import { otherSide } from "../../shared/utility";
 import { GAME_TIMER_SECONDS } from "../../shared/constants";
-import type { GameState, GameAction, PlayedAction, SetPlayersAction, SetOnlinePlayersAction, SetWinnerAction, SetLeaderboardAction } from "../../types";
+import { createEmptyBoard } from "../../shared/boardUtils";
+import type { GameState, GameAction, PlayedAction, SetPlayersAction, SetOnlinePlayersAction, SetWinnerAction, SetLeaderboardAction, SetBoardSizeAction } from "../../types";
 
 const initialState: GameState = {
   boxes: {
@@ -44,11 +45,17 @@ const initialState: GameState = {
   error: false,
   loading: false,
   winningCombination: null,
+  boardSize: 3,
+  winCondition: 3,
 };
 
 const play = (state: GameState, action: PlayedAction): GameState => playedLogic(state, action);
 
-const setPlayers = (state: GameState, action: SetPlayersAction): GameState => {
+const setPlayers = (state: GameState, action: SetPlayersAction & { boardSize?: number }): GameState => {
+  const boardSize = action.boardSize || state.boardSize || 3;
+  const winCondition = boardSize; // 3x3 needs 3, 4x4 needs 4, 5x5 needs 5
+  const emptyBoard = createEmptyBoard(boardSize);
+  
   const sideArray: ("X" | "O")[] = ["X", "O"];
   const random = Math.floor(Math.random() * 2);
   const side1 = sideArray[random];
@@ -80,32 +87,40 @@ const setPlayers = (state: GameState, action: SetPlayersAction): GameState => {
   if (players.length === 1) {
     if (players[0].side === "O") {
       // Computer starts as X
-      const boxes = computerPlay("X", initialState.boxes);
+      const computerBoxes = computerPlay("X", emptyBoard, boardSize, winCondition);
       return {
         ...initialState,
+        boxes: computerBoxes,
         leaders: state.leaders,
         players,
         gameStarted: true,
-        boxes,
         toPlay: "O",
+        boardSize,
+        winCondition,
       };
     } else {
       // Player starts as X, computer will be O
       return {
         ...initialState,
+        boxes: emptyBoard,
         leaders: state.leaders,
         players,
         gameStarted: true,
         toPlay: "X",
+        boardSize,
+        winCondition,
       };
     }
   }
 
   return {
     ...initialState,
+    boxes: emptyBoard,
     leaders: state.leaders,
     players,
     gameStarted: true,
+    boardSize,
+    winCondition,
   };
 };
 
@@ -135,7 +150,9 @@ const setWinner = (state: GameState, action: SetWinnerAction): GameState => {
   const winnerResult = findWinner(state.players, action.side);
   if (winnerResult) {
     // Check for winning combination when setting winner
-    const winResult = checkBoxes(state.boxes);
+    const boardSize = state.boardSize || 3;
+    const winCondition = state.winCondition || 3;
+    const winResult = checkBoxes(state.boxes, boardSize, winCondition);
     return {
       ...state,
       ...winnerResult,
@@ -143,6 +160,19 @@ const setWinner = (state: GameState, action: SetWinnerAction): GameState => {
     };
   }
   return state;
+};
+
+const setBoardSize = (state: GameState, action: SetBoardSizeAction): GameState => {
+  const emptyBoard = createEmptyBoard(action.boardSize);
+  return {
+    ...state,
+    boxes: emptyBoard,
+    boardSize: action.boardSize,
+    winCondition: action.winCondition,
+    gameOver: false,
+    gameStarted: false,
+    winningCombination: null,
+  };
 };
 
 const setLeaderboard = (state: GameState, action: SetLeaderboardAction): GameState => {
@@ -173,6 +203,8 @@ const reducer = (state: GameState = initialState, action: GameAction): GameState
       return leaderboardStart(state);
     case actionTypes.LEADERBOARD_FAILED:
       return leaderboardFailed(state);
+    case actionTypes.SET_BOARD_SIZE:
+      return setBoardSize(state, action as SetBoardSizeAction);
     default:
       return state;
   }

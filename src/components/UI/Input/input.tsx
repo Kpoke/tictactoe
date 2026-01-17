@@ -28,8 +28,11 @@ const Input: React.FC<InputProps> = (props) => {
   let inputElement: JSX.Element | null = null;
   const inputClasses = [classes.InputElement];
 
-  if (props.invalid && props.shouldValidate && props.touched) {
+  if (props.invalid && (props.shouldValidate !== false) && props.touched) {
     inputClasses.push(classes.Invalid);
+    if (props.touched) {
+      inputClasses.push("touched");
+    }
   }
 
   switch (props.elementType) {

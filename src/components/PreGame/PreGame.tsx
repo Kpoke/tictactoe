@@ -59,35 +59,68 @@ const PreGame: React.FC<PreGameProps> = ({ showPreGame }) => {
     }
   }, [setOnlinePlayers, user, showPreGame, opponent, time]);
   
-  const toShow = (
-    <div>
-      {matched ? (
-        <p>Game Starts in {time}</p>
-      ) : (
-        <div>
-          <Loading />
-          <p>Searching for Opponents</p>
-          <Button
-            btnType="Success"
-            size="Small"
-            onClick={() => {
-              if (ws) {
-                ws.cancelWaiting();
-              }
-              showPreGame(false);
-            }}
-          >
-            cancel
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-
   return (
-    <div className={classes.container} role="dialog" aria-label="Waiting for opponent" aria-live="polite">
-      {toShow}
-    </div>
+    <>
+      <div className={classes.overlay} onClick={() => {
+        if (ws && !matched) {
+          ws.cancelWaiting();
+        }
+        showPreGame(false);
+      }} />
+      <div className={classes.container} role="dialog" aria-label="Waiting for opponent" aria-live="polite">
+        <div className={classes.header}>
+          <h2 className={classes.headerTitle}>
+            {matched ? "Match Found!" : "Finding Opponent"}
+          </h2>
+          <p className={classes.headerSubtitle}>
+            {matched ? "Get ready to play" : "Waiting for another player to join"}
+          </p>
+        </div>
+
+        <div className={classes.content}>
+          {matched ? (
+            <div className={classes.matchedContainer}>
+              <div className={classes.opponentCard}>
+                <p className={classes.opponentFound}>Your Opponent</p>
+                <p className={classes.opponentName}>{opponent?.username}</p>
+                {opponent?.side && (
+                  <span className={`${classes.opponentSide} ${opponent.side === "X" ? classes.opponentSideX : classes.opponentSideO}`}>
+                    Playing as {opponent.side}
+                  </span>
+                )}
+              </div>
+              <div className={classes.countdownContainer}>
+                <p className={classes.countdownLabel}>Game starts in</p>
+                <p className={classes.countdownNumber}>{time}</p>
+              </div>
+            </div>
+          ) : (
+            <div className={classes.searchingContainer}>
+              <div className={classes.spinnerWrapper}>
+                <Loading />
+              </div>
+              <div>
+                <p className={classes.searchingText}>Searching for Opponents</p>
+                <p className={classes.searchingSubtext}>This may take a few moments...</p>
+              </div>
+              <Button
+                btnType="Danger"
+                size="Small"
+                onClick={() => {
+                  if (ws) {
+                    ws.cancelWaiting();
+                  }
+                  showPreGame(false);
+                }}
+                className={classes.cancelButton}
+              >
+                <span>Cancel Search</span>
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import type { GameAction, AuthAction } from "./types";
+import { isOnlineMultiplayerEnabled } from "./utils/featureFlags";
 
 declare global {
   interface Window {
@@ -37,11 +38,20 @@ const store = createStore(
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = ThunkDispatch<RootState, unknown, GameAction | AuthAction>;
 
+const AppWrapper: React.FC = () => {
+  if (isOnlineMultiplayerEnabled()) {
+    return (
+      <WebSocketProvider>
+        <App />
+      </WebSocketProvider>
+    );
+  }
+  return <App />;
+};
+
 const app = (
   <Provider store={store}>
-    <WebSocketProvider>
-      <App />
-    </WebSocketProvider>
+    <AppWrapper />
   </Provider>
 );
 
